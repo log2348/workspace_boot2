@@ -18,7 +18,7 @@ public interface RemoteController {
 	
 	public abstract void turnOn();
 
-	int SERIAL_NUMBER2 = 100; // 축약형 (public static final 생략)
+	int SERIAL_NUMBE2 = 100; // 축약형 (public static final 생략)
 	void turnOff(); // 축약형 (public abstract void 생략)
 	
 	

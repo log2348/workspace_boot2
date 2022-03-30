@@ -13,16 +13,17 @@ public class UserInfoClient {
 		
 		Scanner scanner = new Scanner(System.in);
 		// 사용자한테 userInfo라는 정보를 받는다.
-		UserInfo info = new UserInfo();
+		UserInfo userInfo = new UserInfo();
 		
 		System.out.print("아이디 : ");
-		info.setUserId(scanner.nextLine());
+		userInfo.setUserId(scanner.nextLine());
 		
 		System.out.print("비밀번호 : ");
-		info.setPassword(scanner.nextLine());
+		userInfo.setPassword(scanner.nextLine());
 		
 		System.out.print("이름 : ");
-		info.setUserName(scanner.nextLine());
+		userInfo.setUserName(scanner.nextLine());
+		
 		
 		//info.setUserId("log2348");
 		//info.setPassword("#1234");
@@ -64,7 +65,6 @@ public class UserInfoClient {
 		if(MYSQL.equals(str)) {
 			userInfoDao = new UserInfoMysqlDao();
 			
-			
 		}else if(ORACLE.equals(str)) {
 			userInfoDao = new UserInfoOracleDao();
 			
@@ -74,8 +74,7 @@ public class UserInfoClient {
 		
 		// 방어적 코드
 		if(userInfoDao != null) {
-			userInfoDao.updateUserInfo(info);
-			
+			userInfoDao.updateUserInfo(userInfo);			
 		}
 		
 	}
