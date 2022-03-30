@@ -42,9 +42,10 @@ public class UserInfoClient {
 		
 		// equals는 문자열의 값을 비교합니다.
 		// == 객체의 주소값을 비교합니다.
+		// if(str == MYSQL) { 
 		
 		// 문자열을 비교할때는 무조건 equals라는 것을 사용한다.
-		// if(str == MYSQL) {
+		
 		/*
 		if("mysql".equals(MYSQL)) {
 			System.out.println("문자열이 같습니다.");
@@ -73,7 +74,7 @@ public class UserInfoClient {
 		
 		// 방어적 코드
 		if(userInfoDao != null) {
-			userInfoDao.insertUserInfo(info);
+			userInfoDao.updateUserInfo(info);
 			
 		}
 		
