@@ -1,8 +1,8 @@
-package ch08;
+package ch11_1;
 
 public class Book {
-
-	private int id;
+	
+	private static int id;
 	private String title;
 	private String author;
 
@@ -38,7 +38,7 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", author=" + author + "]";
+		return "[ id : " + id + ", 제목 : " + title + ", 작가 : " + author + " ]";
 	}
 
 }

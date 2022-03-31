@@ -1,7 +1,7 @@
-package ch08;
+package ch11;
 
 public class Book {
-
+	
 	private int id;
 	private String title;
 	private String author;
@@ -39,6 +39,6 @@ public class Book {
 	@Override
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", author=" + author + "]";
-	}
+	} // 주소값 반환되도록 약속 --> 재정의하여 객체의 변수 정보 나오도록
 
 }
