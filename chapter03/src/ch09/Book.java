@@ -7,7 +7,6 @@ public class Book {
 	private static int bookId = 0;
 	private String title = null;
 	private String author = null;
-	private Scanner scanner;
 	
 	public Book() {
 		bookId++;		

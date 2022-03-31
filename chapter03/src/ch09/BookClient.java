@@ -21,8 +21,8 @@ public class BookClient {
 		System.out.print("저자 : ");
 		book.setAuthor(scanner.nextLine());
 		
-		// bookDaoMySql.insertBookInfo(book);
-		// nullPointerException 해결하기
+		//bookDaoMySql.insertBookInfo(book);
+		//nullPointerException 해결하기
 	}
 
 	// 수정
