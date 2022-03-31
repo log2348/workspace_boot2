@@ -59,7 +59,7 @@ public class BookArrayList implements BookService {
 		}
 		
 		if(deleteOk) {
-			System.out.println(title + " 책을 삭제 하였습니다.");
+			System.out.println(title + " 책을 삭제하였습니다.");
 		} else {
 			System.out.println(title + " 책이 존재하지 않습니다.");
 		}
