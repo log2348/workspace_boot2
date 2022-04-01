@@ -8,7 +8,7 @@ public class BookArray implements BookService {
 	public void addBook(Book book) {
 		for (int i = 0; i < books.length; i++) {
 			if (books[i] == null) {
-				System.out.println("책을 추가합니다.");
+				System.out.println("새로운 책을 추가합니다.");
 				books[i] = book;
 				return;
 			}
@@ -18,12 +18,9 @@ public class BookArray implements BookService {
 
 	@Override
 	public void updateBook(String title, Book book) {
-		System.out.println("책의 정보를 수정합니다.");
 
 		for (int i = 0; i < books.length; i++) {
-			if(books[i] == null) {
-				continue;
-			} else if (books[i].getTitle().equals(title)) {
+			if (books[i].getTitle().equals(title)) {
 				books[i] = book;
 				return;
 			}
@@ -53,7 +50,7 @@ public class BookArray implements BookService {
 		System.out.println("책의 정보를 조회합니다.");
 		for (int i = 0; i < books.length; i++) {
 			if(books[i] == null) {
-				System.out.println("저장된 책이 없습니다.");
+				//System.out.println("저장된 책이 없습니다.");
 				continue;
 			} else if (books[i].getTitle().equals(title)) {
 				System.out.println(books[i]);
@@ -74,7 +71,6 @@ public class BookArray implements BookService {
 				
 			}
 		}
-		System.out.println("저장된 책이 없습니다.");
 
 	}
 
