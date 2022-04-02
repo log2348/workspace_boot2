@@ -16,6 +16,14 @@ public class ToDo {
 		this.day = day;
 	}
 
+	public static int getSerialNumber() {
+		return serialNumber;
+	}
+
+	public static void setSerialNumber(int serialNumber) {
+		ToDo.serialNumber = serialNumber;
+	}
+
 	public int getId() {
 		return id;
 	}

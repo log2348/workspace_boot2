@@ -75,7 +75,7 @@ public class ToDoMain {
 				int id = scanner.nextInt();
 				scanner.nextLine();
 				
-				toDoArrayList.deleteList(id);			
+				toDoArrayList.deleteList(id);	
 				
 				
 			} else if (selectMenu.equals("4")) {
