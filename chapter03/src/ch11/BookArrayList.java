@@ -12,7 +12,7 @@ public class BookArrayList implements BookService {
 		Book book3 = new Book(3, "홍길동전3", "홍가3");
 		Book book4 = new Book(4, "홍길동전4", "홍가4");
 		Book book5 = new Book(5, "홍길동전5", "홍가5");
-		BookClient.serialBookNumber = 5;
+
 		books.add(book1);
 		books.add(book2);
 		books.add(book3);
