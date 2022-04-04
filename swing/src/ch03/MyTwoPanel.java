@@ -36,7 +36,6 @@ public class MyTwoPanel extends JFrame {
 		panel2 = new JPanel();
 		panel2.setBackground(Color.blue);
 
-
 		button1 = new Button("button1");
 		button2 = new Button("button2");
 		button3 = new Button("button3");
