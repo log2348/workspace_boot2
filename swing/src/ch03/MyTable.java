@@ -8,11 +8,13 @@ import javax.swing.JTextField;
 public class MyTable extends JFrame {
 
 	private JTable table;
-	private JFrame frame;
 
 	private final String[] titles = { "이름", "전화번호", "비고" };
-	private String[][] contents = { { "박지현1", "010-0000-0000" }, { "박지현2", "010-0000-0000" },
-			{ "박지현3", "010-0000-0000" } };
+	private String[][] contents = {
+			{ "박지현1", "010-0000-0000", ""},
+			{ "박지현2", "010-0000-0000", ""},
+			{ "박지현3", "010-0000-0000", ""}
+			};
 
 	private JScrollPane jScrollPane = new JScrollPane();
 
@@ -24,17 +26,23 @@ public class MyTable extends JFrame {
 
 	private void initData() {
 		table = new JTable(contents, titles);
-		frame = new JFrame();
 
-		setTitle("JTable 연습");
-		setSize(500, 200);
+		//setSize(500, 200);
 		
 		table.setBounds(30, 40, 200, 300);
 		JScrollPane jsp = new JScrollPane(table);
-		
-		frame.add(jsp);
-		frame.setSize(500, 200);
-		frame.setVisible(true);
+		add(jsp);
+		setTitle("JTable 연습");
+		setSize(500, 200);
+
+		/*
+		 *  JTable jTable = new JTable(d, cn); 
+        jTable.setBounds(30, 40, 200, 300);
+        JScrollPane jsp = new JScrollPane(jTable);
+        add(jsp);
+        setTitle("JTable 연습");
+        setSize(500, 200);
+		 */
 		
 	}
 
