@@ -26,24 +26,13 @@ public class MyTable extends JFrame {
 
 	private void initData() {
 		table = new JTable(contents, titles);
-
-		//setSize(500, 200);
+		JScrollPane jsp = new JScrollPane(table);
 		
 		table.setBounds(30, 40, 200, 300);
-		JScrollPane jsp = new JScrollPane(table);
 		add(jsp);
 		setTitle("JTable 연습");
 		setSize(500, 200);
 
-		/*
-		 *  JTable jTable = new JTable(d, cn); 
-        jTable.setBounds(30, 40, 200, 300);
-        JScrollPane jsp = new JScrollPane(jTable);
-        add(jsp);
-        setTitle("JTable 연습");
-        setSize(500, 200);
-		 */
-		
 	}
 
 	private void setInitLayout() {
