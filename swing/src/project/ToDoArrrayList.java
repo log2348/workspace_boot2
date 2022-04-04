@@ -34,7 +34,7 @@ public class ToDoArrrayList implements ToDoService {
 	@Override
 	public void deleteList(int id) {
 
-		boolean flag = false;
+		boolean deleteCheck = false;
 
 		for (int i = 0; i < toDoList.size(); i++) {
 			if (toDoList.get(i) != null) {
@@ -45,7 +45,7 @@ public class ToDoArrrayList implements ToDoService {
 //							toDoList.get(j).setSerialNumber(j + 1);				
 //						}
 
-						flag = true;
+						deleteCheck = true;
 					}
 				}
 			} else {
@@ -53,7 +53,7 @@ public class ToDoArrrayList implements ToDoService {
 			}
 		}
 
-		if (flag) {
+		if (deleteCheck) {
 			System.out.println("삭제가 완료되었습니다.");
 		} else {
 			System.out.println("삭제할 데이터가 존재하지 않습니다.");
@@ -79,20 +79,20 @@ public class ToDoArrrayList implements ToDoService {
 	public void selectListBydDate(String month, String day) {
 		System.out.println("날짜별 리스트를 출력합니다.");
 
-		boolean flag = false;
+		boolean check = false;
 
 		for (int i = 0; i < toDoList.size(); i++) {
 			if (toDoList.get(i) != null) {
 				if (toDoList.get(i).getDay().equals(day) && toDoList.get(i).getMonth().equals(month)) {
 					System.out.println(toDoList.get(i).getMonth() + "월 " + toDoList.get(i).getDay() + "일 : "
 							+ toDoList.get(i).getToDo());
-					flag = true;
+					check = true;
 				}
 			}
 
 		}
 
-		if (flag) {
+		if (check) {
 			return;
 		} else {
 			System.out.println("해당 날짜에 저장된 데이터가 없습니다.");
@@ -104,14 +104,14 @@ public class ToDoArrrayList implements ToDoService {
 	public void selectListByMonth(String month) {
 		System.out.println("월별 리스트를 출력합니다.");
 
-		boolean flag = false;
+		boolean check = false;
 
 		for (int i = 0; i < toDoList.size(); i++) {
 			if (toDoList.get(i) != null) {
 				if (toDoList.get(i).getMonth().equals(month)) {
 					System.out.println(toDoList.get(i).getMonth() + "월 " + toDoList.get(i).getDay() + "일 : "
 							+ toDoList.get(i).getToDo());
-					flag = true;
+					check = true;
 
 				}
 				continue;
@@ -119,7 +119,7 @@ public class ToDoArrrayList implements ToDoService {
 
 		}
 
-		if (flag) {
+		if (check) {
 			return;
 		} else {
 			System.out.println("해당하는 월에 저장된 데이터가 없습니다.");
