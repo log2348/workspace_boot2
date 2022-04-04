@@ -10,8 +10,7 @@ public class MainTest2 {
 		 * 
 		 */
 		
-		new MyImageFrame2();
-		
+		new MyImageFrame2();	
 
 	}
 

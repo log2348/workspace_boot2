@@ -48,7 +48,7 @@ public class MyTwoPanel extends JFrame {
 	private void setInitLayout() {
 		setVisible(true);
 		setLayout(new GridLayout(2, 1));
-		panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
 		add(panel1);
