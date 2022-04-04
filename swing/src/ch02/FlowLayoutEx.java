@@ -5,7 +5,7 @@ import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class LayoutEx extends JFrame {
+public class FlowLayoutEx extends JFrame {
 
 	private JButton button1;
 	private JButton button2;
@@ -14,7 +14,7 @@ public class LayoutEx extends JFrame {
 	private JButton button5;
 	private FlowLayout flowLayout;
 
-	public LayoutEx() {
+	public FlowLayoutEx() {
 		initData();
 		setInitLayout();
 	}
