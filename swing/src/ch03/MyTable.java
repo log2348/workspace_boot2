@@ -25,10 +25,10 @@ public class MyTable extends JFrame {
 	}
 
 	private void initData() {
-		table = new JTable(contents, titles);
+		table = new JTable(contents, titles); // (contents, header)
 		JScrollPane jsp = new JScrollPane(table);
 		
-		table.setBounds(30, 40, 200, 300);
+		//table.setBounds(30, 40, 200, 300);
 		add(jsp);
 		setTitle("JTable 연습");
 		setSize(500, 200);

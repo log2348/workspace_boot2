@@ -42,7 +42,7 @@ public class MyColorPanel extends JFrame implements ActionListener {
 
 		panel2 = new JPanel();
 
-	}
+	}    
 
 	private void setInitLayout() {
 		setVisible(true);
