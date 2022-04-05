@@ -18,8 +18,8 @@ public class MyFrame8 extends JFrame implements KeyListener {
 	private BufferedImage bgImage;
 	private BufferedImage iconImage;
 	
-	private static final String IMAGE_NAME= "flower.jpg";
-	private static final String ICON_NAME= "butterfly.png";
+	private final String IMAGE_NAME= "flower.jpg";
+	private final String ICON_NAME= "butterfly.png";
 
 	private MyImagePanel myImagePanel;
 
