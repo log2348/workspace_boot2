@@ -28,7 +28,7 @@ public class MyColorPanel extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
-		setTitle("도전과제");
+		setTitle("JPanel 활용");
 		setSize(700, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
