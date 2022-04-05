@@ -1,4 +1,4 @@
-package project;
+package project_todo_list;
 
 public class ToDoClient {
 

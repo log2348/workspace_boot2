@@ -1,4 +1,4 @@
-package project;
+package project_todo_list;
 
 import java.util.Scanner;
 
