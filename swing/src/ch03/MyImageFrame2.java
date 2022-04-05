@@ -16,11 +16,11 @@ public class MyImageFrame2 extends JFrame {
 	// 코드를 조금 수정해주세요
 	// 상수, static 활용해서 처리해주세요
 
-	private static final int X = 0;
-	private static final int Y = 0;
+	private final int X = 0;
+	private final int Y = 0;
 
-	private static final int BACKGROUND_WIDTH = 500;
-	private static final int BACKGROUND_HEIGHT = 500;
+	private final int BACKGROUND_WIDTH = 500;
+	private final int BACKGROUND_HEIGHT = 500;
 
 	private static int icon_width;
 	private static int icon_height;
