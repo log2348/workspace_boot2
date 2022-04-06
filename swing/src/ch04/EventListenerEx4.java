@@ -40,11 +40,11 @@ public class EventListenerEx4 extends JFrame implements MouseListener {
 	// 마우스가 클릭 되었을 때 호출
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		//System.out.println("x 좌표값 : " + e.getX());
-		//System.out.println("y 좌표값 : " + e.getY());
+		System.out.println("x 좌표값 : " + e.getX());
+		System.out.println("y 좌표값 : " + e.getY());
 
-		// System.out.println("label width : " + label1.getBounds().width);
-		// System.out.println("label height : " + label1.getBounds().height);
+		System.out.println("label width : " + label1.getBounds().width);
+		System.out.println("label height : " + label1.getBounds().height);
 
 		// 문제 - 현재 간격을 최소화 만들어서 정확성을 높여보자
 

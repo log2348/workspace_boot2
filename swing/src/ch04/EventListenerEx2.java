@@ -19,7 +19,7 @@ public class EventListenerEx2 extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
-		setTitle("이벤트 리스터 연습2");
+		setTitle("이벤트 리스너 연습2");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(500, 500);
 		button1 = new JButton("button1");
@@ -40,8 +40,11 @@ public class EventListenerEx2 extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// 문제
-		// 버튼 1이 눌러졌는지 버튼 2가 눌러졌는지 구분해서 화면에 출력하세요
+		/*
+		 * 문제
+		 * 버튼 1이 눌러졌는지 버튼 2가 눌러졌는지 구분해서 화면에 출력하세요
+		 */
+
 		/*
 		 * 방법 1 System.out.println(e.getActionCommand() + "이 클릭되었습니다.");
 		 * 
@@ -50,7 +53,7 @@ public class EventListenerEx2 extends JFrame implements ActionListener {
 		 * System.out.println("버튼2가 클릭되었습니다."); }
 		 */
 
-		Object obj = e.getSource();
+		//Object obj = e.getSource();
 		// 우리는 Object --> JButton 파악 가능
 		JButton selectedBtn = (JButton) e.getSource();
 		if (selectedBtn.getText().equals(this.button1.getText())) {
