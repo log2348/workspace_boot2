@@ -1,6 +1,10 @@
 package thread_Ex;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -8,10 +12,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MyMiniGame extends JFrame {
+public class MyMiniGame2 extends JFrame implements ActionListener {
 
 	private BufferedImage backgroundImg;
 	private BufferedImage iconImg1;
@@ -29,12 +34,18 @@ public class MyMiniGame extends JFrame {
 
 	private static final int MIN_X = -20;
 	private static final int MIN_Y = -20;
+	
+	private JPanel panel1;
+	private JPanel panel2;
+
+	private JButton startButton;
+	private JButton stopButton;
 
 	private String backgroundImgName = "flower.jpg";
 	private String iconImgName1 = "honeybee.png";
 	private String iconImgName2 = "butterfly.png";
 
-	public MyMiniGame() {
+	public MyMiniGame2() {
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -46,10 +57,17 @@ public class MyMiniGame extends JFrame {
 	}
 
 	private void initData() {
-		setSize(600, 600);
+		setSize(MAX_X, MAX_Y);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		customJPanel = new CustomJPanel();
+		customJPanel.setSize(MAX_X, MAX_Y);
+		
+		panel1 = new JPanel();
+		panel2 = new JPanel();
+
+		startButton = new JButton("MOVE");
+		stopButton = new JButton("STOP");
 
 		// TODO 파일 가져오기
 		try {
@@ -65,12 +83,28 @@ public class MyMiniGame extends JFrame {
 	private void setInitLayout() {
 		setVisible(true);
 		setResizable(false);
+
+		add(panel1);
+		add(panel2);
+		panel1.setSize(MAX_X, MAX_Y);
+		panel1.setBackground(Color.pink);
+
+//		panel1.add(startButton);
+//		panel1.add(stopButton);
 		
-		add(customJPanel);
+		panel1.add(customJPanel, BorderLayout.CENTER);
+
+//		panel1.add(customJPanel, BorderLayout.CENTER);
+
+//		customJPanel.add(startButton);
+//		customJPanel.add(stopButton);
 
 	}
 
 	private void addEventListener() {
+
+		startButton.addActionListener(this);
+		stopButton.addActionListener(this);
 
 		this.addKeyListener(new KeyAdapter() {
 
@@ -150,8 +184,21 @@ public class MyMiniGame extends JFrame {
 		}
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		JButton selectedBtn = (JButton) e.getSource();
+
+		if (selectedBtn.getText().equals(this.startButton.getText())) {
+			customJPanel.direction = true;
+		} else if (selectedBtn.getText().equals(this.stopButton.getText())) {
+			customJPanel.direction = false;
+		}
+	}
+
 	public static void main(String[] args) {
-		new MyMiniGame();
+		new MyMiniGame2();
 	}
 
 }
+

@@ -2,15 +2,16 @@ package thread_Ex;
 
 class BookStore {
 
-	private static int totalBookNumber = 100;
+	private int totalBookNumber = 100;
 	private String bookTitle;
 
-	public static int getTotalBookNumber() {
+
+	public int getTotalBookNumber() {
 		return totalBookNumber;
 	}
 
-	public static void setTotalBookNumber(int totalBookNumber) {
-		BookStore.totalBookNumber = totalBookNumber;
+	public void setTotalBookNumber(int totalBookNumber) {
+		this.totalBookNumber = totalBookNumber;
 	}
 
 	public synchronized void restockBook(int bookNumber) {
