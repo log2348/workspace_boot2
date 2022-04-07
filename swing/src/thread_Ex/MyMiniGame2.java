@@ -1,7 +1,7 @@
 package thread_Ex;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,11 +34,12 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 
 	private static final int MIN_X = -20;
 	private static final int MIN_Y = -20;
-	
-	private JPanel panel1;
-	private JPanel panel2;
 
-	private JButton startButton;
+	private boolean isThread = true;
+
+	private JPanel bottomPanel;
+
+	private JButton moveButton;
 	private JButton stopButton;
 
 	private String backgroundImgName = "flower.jpg";
@@ -62,11 +63,10 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 
 		customJPanel = new CustomJPanel();
 		customJPanel.setSize(MAX_X, MAX_Y);
-		
-		panel1 = new JPanel();
-		panel2 = new JPanel();
 
-		startButton = new JButton("MOVE");
+		bottomPanel = new JPanel(new FlowLayout());
+
+		moveButton = new JButton("MOVE");
 		stopButton = new JButton("STOP");
 
 		// TODO 파일 가져오기
@@ -81,29 +81,23 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 	}
 
 	private void setInitLayout() {
+		setSize(600, 600);
 		setVisible(true);
 		setResizable(false);
 
-		add(panel1);
-		add(panel2);
-		panel1.setSize(MAX_X, MAX_Y);
-		panel1.setBackground(Color.pink);
+		bottomPanel.add(moveButton);
+		bottomPanel.add(stopButton);
 
-//		panel1.add(startButton);
-//		panel1.add(stopButton);
-		
-		panel1.add(customJPanel, BorderLayout.CENTER);
+		add(customJPanel, BorderLayout.CENTER);
+		add(bottomPanel, BorderLayout.SOUTH);
 
-//		panel1.add(customJPanel, BorderLayout.CENTER);
-
-//		customJPanel.add(startButton);
-//		customJPanel.add(stopButton);
+		this.requestFocusInWindow();
 
 	}
 
 	private void addEventListener() {
 
-		startButton.addActionListener(this);
+		moveButton.addActionListener(this);
 		stopButton.addActionListener(this);
 
 		this.addKeyListener(new KeyAdapter() {
@@ -131,11 +125,11 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 			}
 		});
 
+		this.requestFocusInWindow();
+
 	}
 
 	private class CustomJPanel extends JPanel implements Runnable {
-
-		boolean direction = true;
 
 		@Override
 		protected void paintComponent(Graphics g) {
@@ -154,31 +148,34 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 			 * 
 			 * thread.sleep 사용
 			 */
+			boolean direction = true;
 
-			while (true) {
+			while (isThread) {
 
-				if (direction) {
-					autoMoveXpoint += 10;
-				} else {
-					autoMoveXpoint -= 10;
-				}
+				if (isThread) {
+					if (direction) {
+						autoMoveXpoint += 10;
+					} else {
+						autoMoveXpoint -= 10;
+					}
 
-				if (autoMoveXpoint == MAX_X) {
-					direction = false;
-				}
+					if (autoMoveXpoint == MAX_X) {
+						direction = false;
+					}
 
-				if (autoMoveXpoint == MIN_X) {
-					direction = true;
-				}
+					if (autoMoveXpoint == MIN_X) {
+						direction = true;
+					}
+
+					try {
+						Thread.sleep(200);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				} // end of if - isThread
 
 				repaint();
-
-				try {
-					Thread.sleep(200);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
 			}
 
 		}
@@ -189,11 +186,13 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 
 		JButton selectedBtn = (JButton) e.getSource();
 
-		if (selectedBtn.getText().equals(this.startButton.getText())) {
-			customJPanel.direction = true;
+		if (selectedBtn.getText().equals(this.moveButton.getText())) {
+			isThread = true;
 		} else if (selectedBtn.getText().equals(this.stopButton.getText())) {
-			customJPanel.direction = false;
+			isThread = false;
 		}
+
+		requestFocusInWindow();
 	}
 
 	public static void main(String[] args) {
@@ -201,4 +200,3 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 	}
 
 }
-
