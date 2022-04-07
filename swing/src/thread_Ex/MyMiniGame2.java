@@ -24,13 +24,13 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 
 	private CustomJPanel customJPanel;
 
-	private static int keyMoveXPoint = 0;
-	private static int keyMoveYPoint = 0;
+	private static int keyMoveXPoint;
+	private static int keyMoveYPoint;
+	private static int autoMoveXpoint;
+	private static int autoMoveYpoint;
 
-	private static int autoMoveXpoint = 0;
-
-	private static final int MAX_X = 460;
-	private static final int MAX_Y = 440;
+	private static final int MAX_X = 430;
+	private static final int MAX_Y = 400;
 
 	private static final int MIN_X = -20;
 	private static final int MIN_Y = -20;
@@ -42,9 +42,9 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 	private JButton moveButton;
 	private JButton stopButton;
 
-	private String backgroundImgName = "flower.jpg";
-	private String iconImgName1 = "honeybee.png";
-	private String iconImgName2 = "butterfly.png";
+	private String backgroundImgName = "leaves.jpg";
+	private String iconImgName1 = "bird.png";
+	private String iconImgName2 = "apple.png";
 
 	public MyMiniGame2() {
 		initData();
@@ -58,16 +58,14 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
-		setSize(MAX_X, MAX_Y);
+		setSize(600, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		customJPanel = new CustomJPanel();
-		customJPanel.setSize(MAX_X, MAX_Y);
-
-		bottomPanel = new JPanel(new FlowLayout());
 
 		moveButton = new JButton("MOVE");
 		stopButton = new JButton("STOP");
+		bottomPanel = new JPanel(new FlowLayout());
 
 		// TODO 파일 가져오기
 		try {
@@ -78,11 +76,12 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 			System.out.println("파일이 존재하지 않습니다.");
 		}
 
+		autoMoveXpoint = 100;
+		autoMoveYpoint = 300;
+
 	}
 
 	private void setInitLayout() {
-		setSize(600, 600);
-		setVisible(true);
 		setResizable(false);
 
 		bottomPanel.add(moveButton);
@@ -90,6 +89,7 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 
 		add(customJPanel, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
+		setVisible(true);
 
 		this.requestFocusInWindow();
 
@@ -135,9 +135,9 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			// TODO 이미지 그리기 3개
-			g.drawImage(backgroundImg, 0, 0, getWidth(), getHeight(), null);
-			g.drawImage(iconImg1, keyMoveXPoint, keyMoveYPoint, getWidth() / 4, getHeight() / 4, null);
-			g.drawImage(iconImg2, autoMoveXpoint, MAX_Y - 100, getWidth() / 4, getHeight() / 4, null);
+			g.drawImage(backgroundImg, 0, 0, 600, 600, null);
+			g.drawImage(iconImg1, keyMoveXPoint, keyMoveYPoint, 150, 150, null);
+			g.drawImage(iconImg2, autoMoveXpoint, autoMoveYpoint, 200, 200, null);
 		}
 
 		@Override
@@ -150,20 +150,20 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 			 */
 			boolean direction = true;
 
-			while (isThread) {
+			while (true) {
 
 				if (isThread) {
 					if (direction) {
-						autoMoveXpoint += 10;
+						autoMoveYpoint += 10;
 					} else {
-						autoMoveXpoint -= 10;
+						autoMoveYpoint -= 10;
 					}
 
-					if (autoMoveXpoint == MAX_X) {
+					if (autoMoveYpoint == 350) {
 						direction = false;
 					}
 
-					if (autoMoveXpoint == MIN_X) {
+					if (autoMoveYpoint == 100) {
 						direction = true;
 					}
 
@@ -188,11 +188,11 @@ public class MyMiniGame2 extends JFrame implements ActionListener {
 
 		if (selectedBtn.getText().equals(this.moveButton.getText())) {
 			isThread = true;
-		} else if (selectedBtn.getText().equals(this.stopButton.getText())) {
+		} else {
 			isThread = false;
 		}
 
-		requestFocusInWindow();
+		this.requestFocusInWindow();
 	}
 
 	public static void main(String[] args) {

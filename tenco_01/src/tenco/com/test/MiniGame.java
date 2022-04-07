@@ -52,9 +52,9 @@ public class MiniGame extends JFrame implements ActionListener {
 	private void initData() {
 		setSize(600, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		startBtn = new JButton("start");
 		endBtn = new JButton("end");
-
 		bottomPanel = new JPanel(new FlowLayout());
 		
 		try {
@@ -94,6 +94,7 @@ public class MiniGame extends JFrame implements ActionListener {
 	}
 
 	private void addEventListener() {
+		
 		
 		startBtn.addActionListener(this);
 		endBtn.addActionListener(this);
