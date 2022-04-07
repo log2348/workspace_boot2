@@ -22,7 +22,7 @@ public class MyFrame extends JFrame{
 	}
 	
 	private void initObject() {
-		backgroundImg = new JLabel(new ImageIcon("images/snow_village.jpg"));
+		backgroundImg = new JLabel(new ImageIcon("images/background.png"));
 		setContentPane(backgroundImg);
 		
 		player = new Player();

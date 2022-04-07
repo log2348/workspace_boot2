@@ -74,14 +74,14 @@ public class Player extends JLabel implements Moveable{
 
 
 	private void initObject() {
-		playerL = new ImageIcon("images/olafL.png");
-		playerR = new ImageIcon("images/olafR.png");
+		playerL = new ImageIcon("images/playerL.png");
+		playerR = new ImageIcon("images/playerR.png");
 		
 	}
 	
 	private void initSetting() {	
-		x = 100;
-		y = 100;
+		x = 300;
+		y = 300;
 		
 		left = false;
 		right = false;
@@ -89,7 +89,7 @@ public class Player extends JLabel implements Moveable{
 		down = false;
 		
 		setIcon(playerR);
-		setSize(playerL.getIconWidth(), playerL.getIconHeight());
+		setSize(80, 120);
 		setLocation(x, y);
 		
 	}
