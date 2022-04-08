@@ -2,7 +2,6 @@ package tenco_game;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -12,6 +11,7 @@ public class MyFrame extends JFrame{
 	
 	private JLabel backgroundImg;
 	private Player player;
+	private Monster monster;
 	
 	public MyFrame() {
 		initObject();
@@ -26,7 +26,10 @@ public class MyFrame extends JFrame{
 		setContentPane(backgroundImg);
 		
 		player = new Player();
+		monster = new Monster();
+		
 		add(player);
+		add(monster);
 	}
 	
 	private void initSetting() {	
@@ -44,7 +47,7 @@ public class MyFrame extends JFrame{
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println("keyPressed");
+				//System.out.println("keyPressed");
 				
 				switch(e.getKeyCode()) {
 				case KeyEvent.VK_LEFT :
@@ -52,6 +55,7 @@ public class MyFrame extends JFrame{
 					if(!player.isLeft()) {
 						player.left();
 					}
+					
 					
 					break;
 				case KeyEvent.VK_RIGHT :
@@ -72,7 +76,7 @@ public class MyFrame extends JFrame{
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				System.out.println("keyReleased");
+				//System.out.println("keyReleased");
 				
 				switch(e.getKeyCode()) {
 				case KeyEvent.VK_LEFT :
