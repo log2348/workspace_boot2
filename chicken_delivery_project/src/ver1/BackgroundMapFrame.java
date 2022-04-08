@@ -60,7 +60,7 @@ public class BackgroundMapFrame extends JFrame {
 	}
 
 	private void changePanel() {
-		mapChangeBtn.addMouseListener(new MouseAdapter() {
+		kitchenMapChangeBtn.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
