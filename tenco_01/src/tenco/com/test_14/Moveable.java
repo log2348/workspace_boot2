@@ -1,4 +1,4 @@
-package tenco.com.test_13;
+package tenco.com.test_14;
 
 /*
  * default를 사용하면 인터페이스도 몸체가 있는 메소드를 만들 수 있다.

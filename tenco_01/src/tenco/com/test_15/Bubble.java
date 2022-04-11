@@ -1,11 +1,14 @@
-package tenco.com.test_13;
+package tenco.com.test_15;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Bubble extends JLabel implements Moveable {
 
+	// 의존성 컴포지션
 	private Player player;
+
+	private BackgroundBubbleObserver backgroundBubbleObserver;
 
 	// 위치 상태
 	private int x;
@@ -103,8 +106,11 @@ public class Bubble extends JLabel implements Moveable {
 		this.bomb = bomb;
 	}
 
-	// 의존 주입 -> 생성자에 주입을 받는다.
-	// tight coupling
+	/*
+	 * 의존 주입(Dependency Injection, DI) -> 생성자에 주입(구현방법)
+	 * 의존관계를 외부에서 결정하고 주입하는 것.
+	 * Bubble이 어떤 값을 가질지 Player가 정한다.
+	 */
 	public Bubble(Player player) {
 		// 의존성 컴포지션 관계
 		this.player = player;
@@ -118,6 +124,7 @@ public class Bubble extends JLabel implements Moveable {
 		bubble = new ImageIcon("images/bubble.png");
 		bubbled = new ImageIcon("images/bubbled.png");
 		bomb = new ImageIcon("images/bomb.png");
+		backgroundBubbleObserver = new BackgroundBubbleObserver(this);
 	}
 
 	private void initSetting() {
@@ -156,8 +163,14 @@ public class Bubble extends JLabel implements Moveable {
 		for (int i = 0; i < 400; i++) {
 			x--;
 			setLocation(x, y);
+			// 현재 색상 체크(메소드 호출)
+			if (backgroundBubbleObserver.checkLeftWall()) {
+				left = false;
+				break;
+			}
 			threadSleep(1);
 		}
+		left = false;
 		up();
 
 	}
@@ -168,8 +181,13 @@ public class Bubble extends JLabel implements Moveable {
 		for (int i = 0; i < 400; i++) {
 			x++;
 			setLocation(x, y);
+			if (backgroundBubbleObserver.checkRightWall()) {
+				right = false;
+				break;
+			}
 			threadSleep(1);
 		}
+		right = false;
 		up();
 
 	}
@@ -181,8 +199,13 @@ public class Bubble extends JLabel implements Moveable {
 		while (up) {
 			y--;
 			setLocation(x, y);
+			if (backgroundBubbleObserver.checkTopWall()) {
+				up = false;
+				break;
+			}
 			threadSleep(1);
 		}
+		up = false;
 
 	}
 

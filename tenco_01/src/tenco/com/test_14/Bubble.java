@@ -1,11 +1,14 @@
-package tenco.com.test_13;
+package tenco.com.test_14;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Bubble extends JLabel implements Moveable {
 
+	// 의존성 컴포지션
 	private Player player;
+
+	private BackgroundBubbleObserver backgroundBubbleObserver;
 
 	// 위치 상태
 	private int x;
@@ -118,6 +121,7 @@ public class Bubble extends JLabel implements Moveable {
 		bubble = new ImageIcon("images/bubble.png");
 		bubbled = new ImageIcon("images/bubbled.png");
 		bomb = new ImageIcon("images/bomb.png");
+		backgroundBubbleObserver = new BackgroundBubbleObserver(this);
 	}
 
 	private void initSetting() {
@@ -156,6 +160,10 @@ public class Bubble extends JLabel implements Moveable {
 		for (int i = 0; i < 400; i++) {
 			x--;
 			setLocation(x, y);
+			// 현재 색상 체크(메소드 호출)
+			if (backgroundBubbleObserver.checkLeftWall()) {
+				break;
+			}
 			threadSleep(1);
 		}
 		up();
@@ -168,6 +176,9 @@ public class Bubble extends JLabel implements Moveable {
 		for (int i = 0; i < 400; i++) {
 			x++;
 			setLocation(x, y);
+			if (backgroundBubbleObserver.checkRightWall()) {
+				break;
+			}
 			threadSleep(1);
 		}
 		up();
@@ -181,6 +192,9 @@ public class Bubble extends JLabel implements Moveable {
 		while (up) {
 			y--;
 			setLocation(x, y);
+			if (backgroundBubbleObserver.checkTopWall()) {
+				break;
+			}
 			threadSleep(1);
 		}
 
