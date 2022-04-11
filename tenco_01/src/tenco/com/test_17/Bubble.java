@@ -3,6 +3,11 @@ package tenco.com.test_17;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Bubble extends JLabel implements Moveable {
 
 	// 2단계
@@ -28,86 +33,6 @@ public class Bubble extends JLabel implements Moveable {
 	private ImageIcon bubble; // 기본 물방울
 	private ImageIcon bubbled; // 적을 가둔 물방울
 	private ImageIcon bomb; // 물방울이 터진 상태
-
-	public Player getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public boolean isLeft() {
-		return left;
-	}
-
-	public void setLeft(boolean left) {
-		this.left = left;
-	}
-
-	public boolean isRight() {
-		return right;
-	}
-
-	public void setRight(boolean right) {
-		this.right = right;
-	}
-
-	public boolean isUp() {
-		return up;
-	}
-
-	public void setUp(boolean up) {
-		this.up = up;
-	}
-
-	public int getState() {
-		return state;
-	}
-
-	public void setState(int state) {
-		this.state = state;
-	}
-
-	public ImageIcon getBubble() {
-		return bubble;
-	}
-
-	public void setBubble(ImageIcon bubble) {
-		this.bubble = bubble;
-	}
-
-	public ImageIcon getBubbled() {
-		return bubbled;
-	}
-
-	public void setBubbled(ImageIcon bubbled) {
-		this.bubbled = bubbled;
-	}
-
-	public ImageIcon getBomb() {
-		return bomb;
-	}
-
-	public void setBomb(ImageIcon bomb) {
-		this.bomb = bomb;
-	}
 
 	/*
 	 * 의존 주입(Dependency Injection, DI) -> 생성자에 주입(구현방법) 의존관계를 외부에서 결정하고 주입하는 것.
