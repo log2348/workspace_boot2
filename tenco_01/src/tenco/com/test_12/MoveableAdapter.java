@@ -15,4 +15,5 @@ public abstract class MoveableAdapter implements Moveable{
 	@Override
 	public void down() {}
 	
+	
 }
