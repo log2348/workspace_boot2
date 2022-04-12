@@ -3,7 +3,6 @@ package tenco.com.test_17;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

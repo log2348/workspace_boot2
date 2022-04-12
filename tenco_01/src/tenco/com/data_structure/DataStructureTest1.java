@@ -34,7 +34,7 @@ public class DataStructureTest1 {
 		// 삭제
 		list3.remove(3);
 		System.out.println(list3);
-		//전체 삭제
+		// 전체 삭제
 		// list3.clear();
 		
 		// 출력 방법
@@ -65,6 +65,10 @@ public class DataStructureTest1 {
 		System.out.println(list3.indexOf(2));
 		System.out.println(list3.indexOf(4));
 		System.out.println(list3.indexOf(100));
+		
+		// 사이즈 지정해줘도 0 반환
+		ArrayList<Integer> arr = new ArrayList<Integer>(5);
+		System.out.println(arr.size());
 		
 	}
 
