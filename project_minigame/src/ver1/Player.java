@@ -1,6 +1,5 @@
 package ver1;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -58,8 +57,8 @@ public class Player extends JLabel implements Moveable {
 	}
 
 	private void initSetting() {
-		x = 0;
-		y = 0;
+		x = 400;
+		y = 500;
 
 		left = false;
 		right = false;
@@ -76,7 +75,7 @@ public class Player extends JLabel implements Moveable {
 	}
 
 	private void initBackgroundPlayerService() {
-//new Thread(new BackgroundPlayerService(this)).start();
+		//new Thread(new BackgroundPlayerService(this)).start();
 	}
 
 	@Override
