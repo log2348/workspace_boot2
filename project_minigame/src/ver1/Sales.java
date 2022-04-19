@@ -9,43 +9,49 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Sales extends JLabel{
+public class Sales extends JLabel {
 
 	private Player player;
 
-	private Chicken chicken;
+	static int totalSales = 0;
+	static int goalSales;
+	static int address;
+	static final int HOUSE_AMOUNT = 8;
 
-	private int totalSales;
+	private BackgroundMapFrame mContext;
 
-	private int goalSales;
-	
-	public Sales() {
+	public Sales(BackgroundMapFrame mContext) {
+		this.mContext = mContext;
 		player = Player.getInstance();
-		
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (player.isCompleteDelivery()) {
-					totalSales += chicken.getCHICKEN_PRICE();
-				}
-				
-			}
-		}).start();
+		address = getRandomAddress();
 
 	}
-	
+
+	public int updateTotalSales() {
+		if (player.isCompleteDelivery()) {
+			totalSales += 19000;
+			address = getRandomAddress();
+
+			if (totalSales >= goalSales) {
+				System.out.println("목표 매출 달성");
+				totalSales = 0;
+				getRandomGoalSales();
+				new AfterSucceedLabel(mContext);
+			}
+		}
+		return totalSales;
+	}
+
 	public int getRandomGoalSales() {
 		Random rd = new Random();
-		int goalSales = (rd.nextInt(10) + 1) * 10000;
+		goalSales = (rd.nextInt(10) + 1) * 10000;
 		return goalSales;
 	}
-	
-	private void resetGoal() {
-		if(totalSales >= goalSales) {
-			System.out.println("목표 매출 달성");
-			getRandomGoalSales();
-		}
+
+	public int getRandomAddress() {
+		Random rd = new Random();
+		int localAddress = rd.nextInt(HOUSE_AMOUNT) + 1;
+		return localAddress;
 	}
 
 }

@@ -11,20 +11,17 @@ import javax.imageio.ImageIO;
 
 // 메인 쓰레드 바쁨 --> 키보드 이벤트 처리
 // 백그라운드에서 계속 관찰
-public class BackgroundPlayerService implements Runnable {
+public class BackgroundEnemyService implements Runnable {
 
 	private BufferedImage image;
-	private Player player; // 포함관계 (composition)
-
-	private List<Bubble> bubbles = new ArrayList<Bubble>();
+	private Enemy enemy; // 포함관계 (composition)
 
 	private static final int XPOINT = 50;
 	private static final int YPOINT = 50;
 	private static final int CENTER_POINT = 25;
 
-	public BackgroundPlayerService(Player player) {
-		this.player = player;
-		this.bubbles = player.getBubbles();
+	public BackgroundEnemyService(Enemy enemy) {
+		this.enemy = enemy;
 
 		try {
 			image = ImageIO.read(new File("images/backgroundMapService.png"));
@@ -41,58 +38,35 @@ public class BackgroundPlayerService implements Runnable {
 		while (true) {
 			try {
 
-				// 1. 버블 충돌 체크
-				for (int i = 0; i < bubbles.size(); i++) {
-					Bubble targetBubble = bubbles.get(i);
-					if (targetBubble.getState() == 1) {
 
-						if ((Math.abs(player.getX() - targetBubble.getX()) < 10)
-								&& (Math.abs(player.getY() - targetBubble.getY()) > 0)
-								&& (Math.abs(player.getY() - targetBubble.getY()) < 50)) {
+				Color leftColor = new Color(image.getRGB(enemy.getX() - 10, enemy.getY() + CENTER_POINT));
+				Color rightColor = new Color(image.getRGB(enemy.getX() + XPOINT + 10, enemy.getY() + CENTER_POINT));
 
-							System.out.println("플레이어 물방울 충돌");
-
-							new Thread(new Runnable() {
-
-								@Override
-								public void run() {
-									targetBubble.removeBubble();
-
-								}
-							}).start();
-							break;
-						}
-					}
-				}
-
-				Color leftColor = new Color(image.getRGB(player.getX() - 10, player.getY() + CENTER_POINT));
-				Color rightColor = new Color(image.getRGB(player.getX() + XPOINT + 10, player.getY() + CENTER_POINT));
-
-				int bottomColor = image.getRGB(player.getX() + 10, player.getY() + YPOINT)
-						+ image.getRGB(player.getX() + XPOINT - 10, player.getY() + YPOINT + 5);
+				int bottomColor = image.getRGB(enemy.getX() + 10, enemy.getY() + YPOINT)
+						+ image.getRGB(enemy.getX() + XPOINT - 10, enemy.getY() + YPOINT + 5);
 
 				// -1(흰색)이 아니라는 것은 빨간색이거나 파란색이다.
 				if (bottomColor != -2) {
-					player.setDown(false);
+					enemy.setDown(false);
 				} else { // -2일때 : 바닥색 하얀색
 					// 점프 하는 순간 down 메서드가 호출
-					if (!player.isUp() && !player.isDown()) { // 질문
-						player.down();
+					if (!enemy.isUp() && !enemy.isDown()) { // 질문
+						enemy.down();
 					}
 				}
 
 				if (leftColor.getRed() == 255 && leftColor.getGreen() == 0 && leftColor.getBlue() == 0) {
 					System.out.println("왼쪽 벽에 충돌했어 !!");
-					player.setLeftWallCrash(true);
-					player.setLeft(false);
+					enemy.setLeftWallCrash(true);
+					enemy.setLeft(false);
 
 				} else if (rightColor.getRed() == 255 && rightColor.getGreen() == 0 && rightColor.getBlue() == 0) {
 					System.out.println("오른쪽 벽에 충돌했어 !!");
-					player.setRightWallCrash(true);
-					player.setRight(false);
+					enemy.setRightWallCrash(true);
+					enemy.setRight(false);
 				} else {
-					player.setLeftWallCrash(false);
-					player.setRightWallCrash(false);
+					enemy.setLeftWallCrash(false);
+					enemy.setRightWallCrash(false);
 				}
 
 			} catch (ArrayIndexOutOfBoundsException e) {
