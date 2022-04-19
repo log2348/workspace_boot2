@@ -18,6 +18,9 @@ public class Player extends JLabel implements Moveable {
 
 	// 플레이어의 방향
 	private PlayerWay playerWay;
+	
+	// 플레이어의 조리 순서
+	private int foodStep;
 
 	// 움직임 상태
 	private boolean left;

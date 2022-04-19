@@ -18,9 +18,9 @@ public class Sales extends JLabel {
 	static int address;
 	static final int HOUSE_AMOUNT = 8;
 
-	private BackgroundMapFrame mContext;
+	private MainFrame mContext;
 
-	public Sales(BackgroundMapFrame mContext) {
+	public Sales(MainFrame mContext) {
 		this.mContext = mContext;
 		player = Player.getInstance();
 		address = getRandomAddress();

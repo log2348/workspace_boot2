@@ -18,7 +18,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BackgroundMapFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener {
 	// 배달 맵 이미지
 	JLabel deliveryMapImg;
 	// 주방 맵 이미지
@@ -33,7 +33,7 @@ public class BackgroundMapFrame extends JFrame implements ActionListener {
 	public JButton changeDeliveryMapBtn;
 	public JButton changeKitchenMapBtn;
 	public JButton startBtn;
-	
+
 	private Sales sales;
 
 	private JLabel totalSalesLabel;
@@ -52,7 +52,7 @@ public class BackgroundMapFrame extends JFrame implements ActionListener {
 	private JLabel deliveryAddressLabel;
 	private AfterSucceedLabel afterSucceedLabel;
 
-	public BackgroundMapFrame() {
+	public MainFrame() {
 		initData();
 		setInitLayout();
 		addEventListener();
@@ -261,7 +261,7 @@ public class BackgroundMapFrame extends JFrame implements ActionListener {
 		});
 
 		this.requestFocusInWindow();
-	} // end of addEventListener
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -323,7 +323,7 @@ public class BackgroundMapFrame extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new BackgroundMapFrame();
+		new MainFrame();
 	}
 
 }
