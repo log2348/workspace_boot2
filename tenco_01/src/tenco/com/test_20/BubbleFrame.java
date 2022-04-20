@@ -25,7 +25,7 @@ public class BubbleFrame extends JFrame {
 		initSetting();
 		initListener();
 		setVisible(true);
-		
+
 		new BGM();
 
 	}
@@ -36,7 +36,7 @@ public class BubbleFrame extends JFrame {
 
 		player = new Player(this);
 		add(player);
-		
+
 		enemy = new Enemy(this);
 		add(enemy);
 
@@ -51,6 +51,21 @@ public class BubbleFrame extends JFrame {
 	}
 
 	private void initListener() {
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				if (enemy.isRight() && !enemy.isRightWallCrash()) {
+					enemy.right();
+				} else {
+					enemy.left();
+
+				}
+
+			}
+		}).start();
+
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {

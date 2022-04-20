@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -37,7 +35,6 @@ public class BackgroundEnemyService implements Runnable {
 		// 색상 확인
 		while (true) {
 			try {
-
 
 				Color leftColor = new Color(image.getRGB(enemy.getX() - 10, enemy.getY() + CENTER_POINT));
 				Color rightColor = new Color(image.getRGB(enemy.getX() + XPOINT + 10, enemy.getY() + CENTER_POINT));

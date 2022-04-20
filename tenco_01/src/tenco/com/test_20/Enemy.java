@@ -47,7 +47,7 @@ public class Enemy extends JLabel implements Moveable {
 
 	// 계속 돌아가도록
 	private void initBackgroundPlayerService() {
-		// new Thread(new BackgroundPlayerService(this)).start();
+		new Thread(new BackgroundEnemyService(this)).start();
 
 	}
 
