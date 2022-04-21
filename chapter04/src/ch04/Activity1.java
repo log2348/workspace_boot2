@@ -9,8 +9,9 @@ public class Activity1 extends BaseActivity {
 
 		@Override
 		public void checkPosition(int x, int y) {
-			System.out.println(name + " 가 콜백을 받았습니다. " + x);
-			System.out.println(name + " 가 콜백을 받았습니다. " + y);
+			System.out.println(name + " 가 콜백을 받았습니다. ");
+			System.out.println("x : " + x);
+			System.out.println("y : " + y);
 
 		}
 	};
