@@ -13,11 +13,11 @@ public class MainTest3 {
 
 			byte[] bs = new byte[26];
 			byte data = 65;
-			for (int i = 0; i < bs.length - 5; i++) {
+			for (int i = 0; i < bs.length; i++) {
 				bs[i] = data;
 				data++;
 			}
-			fos.write(bs, 3, 23);
+			fos.write(bs, 3, 21);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
