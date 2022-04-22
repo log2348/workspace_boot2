@@ -20,6 +20,7 @@ public class MainTest1 {
 			System.out.println((char)fis.read());
 			System.out.println((char)fis.read());
 			System.out.println((char)fis.read()); // read() : 더이상 읽을 글자가 없으면 -1 반환
+			
 		} catch (FileNotFoundException e) {
 			System.out.println("파일이 없습니다.");
 		} catch (IOException e) {

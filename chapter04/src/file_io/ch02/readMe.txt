@@ -13,4 +13,5 @@ ByteArrayInputStream : byte 배열 메모리에서 바이트 단위로 자료를
 int read() : 입력 스트림으로부터 한 바이트의 자료를 읽는다.
 int read(byte b[]) : 입력 스트림으로부터 b[] 크기의 자료를 읽는다. (읽은 자료의 바이트 수를 반환)
 int read(byte b[], int off, int len) : off 변수 위치부터 지정, len 길이 만큼 읽음, 바이트를 반환
-void close() : 입력 스트림과 연결된 대상 리소스를 담는다.
+void close() : 입력 스트림과 연결된 대상 리소스를 닫는다.
+
