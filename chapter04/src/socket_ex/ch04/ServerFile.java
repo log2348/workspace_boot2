@@ -1,14 +1,17 @@
-package socket_ex.ch03;
+package socket_ex.ch04;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerFile {
+import javax.swing.JFrame;
+
+public class ServerFile extends JFrame {
 
 	ServerSocket serverSocket;
 	Socket socket;
@@ -18,7 +21,9 @@ public class ServerFile {
 	BufferedReader keyboardBufferedReader;
 
 	public ServerFile() {
+
 		System.out.println("1. >>>>>>> 서버 소켓 시작 <<<<<<<");
+
 		try {
 			serverSocket = new ServerSocket(10000); // 포트번호
 			System.out.println("2. 서버 소켓 생성 완료");
@@ -39,8 +44,16 @@ public class ServerFile {
 			thread.start();
 
 			while (true) {
-				String msg = bufferedReader.readLine();
-				System.out.println("4. 클라이언트로부터 받은 메세지 : " + msg);
+
+				try (BufferedWriter bw = new BufferedWriter(new FileWriter("message.txt", true))) {
+					String clientMsg = bufferedReader.readLine();
+					System.out.println("4. 클라이언트로부터 받은 메세지 : " + clientMsg);
+					bw.write(clientMsg + "\n");
+					bw.flush();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			}
 
@@ -67,12 +80,13 @@ public class ServerFile {
 		public void run() {
 
 			while (true) {
+
 				try {
 					// 키보드에서 데이터를 읽어줌
-					String msg = keyboardBufferedReader.readLine();
+					String serverMsg = keyboardBufferedReader.readLine();
 
 					// 클라이언트로 데이터 보내기
-					bufferedWriter.write(msg + "\n");
+					bufferedWriter.write(serverMsg + "\n");
 					bufferedWriter.flush();
 				} catch (IOException e) {
 					e.printStackTrace();
