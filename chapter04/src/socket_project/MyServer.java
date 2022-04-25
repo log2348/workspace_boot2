@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -36,8 +37,8 @@ public class MyServer extends JFrame implements ActionListener {
 	private BufferedWriter bufferedWriter; // 클라이언트에게 메시지 보내기
 	private BufferedReader keyboardBufferedReader; // 키보드에서 데이터 읽어옴
 
-	private ChattingRoom chattingRoom;
-	private User user;
+	//private ChattingRoom chattingRoom;
+	Vector<User> users = new Vector<User>(); // User 객체 담음
 
 	public MyServer() {
 		initData();
@@ -101,24 +102,19 @@ public class MyServer extends JFrame implements ActionListener {
 	}
 	
 	private void connect() {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					outputMessage.append("접속 대기 중\n");
-					socket = serverSocket.accept();				
-					user = new User(socket);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				User user = new User(socket);
-
-				System.out.println("클라이언트 연결됨");
+		
+		while(true) {
+			try {
+				outputMessage.append("접속 대기 중\n");
+				socket = serverSocket.accept();
 				
+				new Thread(new ReceiveThread()).start();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		}).start();
+			
+		}
+		
 	}
 
 	// 클라이언트에게 메시지 보내는 쓰레드

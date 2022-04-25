@@ -14,6 +14,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements Chat {
+	/*
+	 * 서버에서 ReceiveThread 생성되면 User가 등록되고,
+	 * User 클래스가 화면에 보이는 메시지 전달, 방만들기 가능하도록
+	 */
 
 	private String name;
 	private Socket userSocket;

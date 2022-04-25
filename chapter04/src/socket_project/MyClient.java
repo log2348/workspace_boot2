@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -24,9 +26,12 @@ public class MyClient extends JFrame implements ActionListener {
 	private String ip = "127.0.0.1";
 	private int port;
 
-	private BufferedWriter bufferedWriter;
-	private BufferedReader keybordBufferedReader; // 키보드에 연결
-	private BufferedReader bufferedReader; // 서버에서 보낸 메시지 읽기
+	private DataInputStream dataInputStream; // 따로 가공하지 않아도됨
+	private DataOutputStream dataOutputStream;
+	// String형으로 버퍼에 저장
+	private BufferedWriter bufferedWriter; // 유저가 입력한 데이터 출력
+	private BufferedReader keyboardReader; // 유저가 키보드에 입력한 데이터 읽기
+	private BufferedReader bufferedReader; // 유저가 입력한 데이터 읽기
 
 	private JButton logInBtn;
 	private JButton sendBtn;
@@ -122,8 +127,18 @@ public class MyClient extends JFrame implements ActionListener {
 		try {
 			// 클라이언트 소켓 생성
 			socket = new Socket(ip, port);
-			user = new User(socket);
-			connectStream();
+			
+			dataInputStream = new DataInputStream(socket.getInputStream());
+			bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+			dataOutputStream = new DataOutputStream(socket.getOutputStream());
+			
+			// 유저네임 받아오기
+			String userName = bufferedReader.readLine();
+			
+			dataOutputStream.writeUTF(userName);
+			
+			new Thread(new SendThread()).start();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("연결 실패");
@@ -180,7 +195,7 @@ public class MyClient extends JFrame implements ActionListener {
 		try {
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			// 키보드 연결
-			keybordBufferedReader = new BufferedReader(new InputStreamReader(System.in));
+			keyboardReader = new BufferedReader(new InputStreamReader(System.in));
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 			bufferedWriter.write(msg);
