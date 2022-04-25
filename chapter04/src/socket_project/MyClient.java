@@ -67,7 +67,7 @@ public class MyClient extends JFrame implements ActionListener {
 		userNameLabel = new JLabel("ID : ");
 		txtIp = new JTextField();
 		txtPort = new JTextField();
-		
+
 		txtIp.setText(ip);
 
 		outputMessage = new JTextArea();
@@ -110,6 +110,7 @@ public class MyClient extends JFrame implements ActionListener {
 		chatPanel.add(outputMessage);
 		chatPanel.add(totalRoomList);
 		chatPanel.add(totalUserList);
+		chatPanel.add(sendBtn);
 
 		add(logInPanel);
 		add(chatPanel);
@@ -120,7 +121,7 @@ public class MyClient extends JFrame implements ActionListener {
 	private void connectServer() {
 		try {
 			// 클라이언트 소켓 생성
-			socket = new Socket(ip, port);			
+			socket = new Socket(ip, port);
 			user = new User(socket);
 			connectStream();
 		} catch (Exception e) {
@@ -128,19 +129,19 @@ public class MyClient extends JFrame implements ActionListener {
 			System.out.println("연결 실패");
 		}
 	}
-	
+
 	private void connectStream() {
-		
+
 		String userName = txtUserName.getText().trim();
 		user.getUsers().add(user);
 		sendMessage(userName);
 		totalUserList.setListData(user.users);
-		
+
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				while(true) {
+				while (true) {
 					try {
 						// 서버로부터 메시지 받기
 						String msg = bufferedReader.readLine();
@@ -150,7 +151,7 @@ public class MyClient extends JFrame implements ActionListener {
 						e.printStackTrace();
 					}
 				}
-				
+
 			}
 		}).start();
 	}
