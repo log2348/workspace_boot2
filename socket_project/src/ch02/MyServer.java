@@ -1,4 +1,4 @@
-package socket_project;
+package ch02;
 
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+// 서버가 열리고 클라이언트가 접속하면
+// ReceiveThread 통해 유저 등록하고 메시지 출력
 public class MyServer extends JFrame implements ActionListener {
 
 	private JButton serverStartBtn;

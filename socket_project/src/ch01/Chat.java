@@ -1,4 +1,4 @@
-package socket_project;
+package ch01;
 
 public interface Chat {
 	

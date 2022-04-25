@@ -1,4 +1,4 @@
-package socket_project;
+package ch02;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +24,7 @@ public class MyClient extends JFrame implements ActionListener {
 
 	private Socket socket;
 	private String ip = "127.0.0.1";
-	private int port;
+	private int port = 5555;
 
 	private DataInputStream dataInputStream; // 따로 가공하지 않아도됨
 	private DataOutputStream dataOutputStream;
@@ -47,7 +47,6 @@ public class MyClient extends JFrame implements ActionListener {
 	private JLabel logInPanel; // 로그인 창
 	private JLabel chatPanel; // 채팅 창
 	private JList<User> totalUserList;
-	private JList<ChattingRoom> totalRoomList;
 
 	private User user;
 
@@ -83,7 +82,6 @@ public class MyClient extends JFrame implements ActionListener {
 		logInBtn = new JButton("로그인");
 		sendBtn = new JButton("전송");
 
-		totalRoomList = new JList<ChattingRoom>();
 		totalUserList = new JList<User>();
 
 	}
@@ -113,7 +111,6 @@ public class MyClient extends JFrame implements ActionListener {
 
 		chatPanel.add(inputMessage);
 		chatPanel.add(outputMessage);
-		chatPanel.add(totalRoomList);
 		chatPanel.add(totalUserList);
 		chatPanel.add(sendBtn);
 
@@ -237,7 +234,6 @@ public class MyClient extends JFrame implements ActionListener {
 				chatPanel.updateUI();
 				chatPanel.add(inputMessage);
 				chatPanel.add(outputMessage);
-				chatPanel.add(totalRoomList);
 				chatPanel.add(totalUserList);
 			}
 		}
