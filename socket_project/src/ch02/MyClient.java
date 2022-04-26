@@ -311,10 +311,10 @@ public class MyClient extends JFrame implements ActionListener {
 			rooms.add(roomTitle);
 			totalRoomList.setListData(rooms);
 			txtRoomTitle.setText(null);
+			JOptionPane.showMessageDialog(null, "방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
 			setTitle("[ " + roomTitle + " ] 입장");
 			if (roomTitle != null) {
 				sendMessage("CreateRoom/" + roomTitle);
-				setContentPane(chatPanel);
 				chatPanel.updateUI();
 			}
 		} else if (selectedBtn == outRoomBtn) {
