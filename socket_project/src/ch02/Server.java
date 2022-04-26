@@ -1,107 +1,49 @@
 package ch02;
 
-import java.awt.ScrollPane;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import lombok.Getter;
+import lombok.Setter;
 
-// 서버가 열리고 클라이언트가 접속하면
-// 클라이언트가 유저로 등록되면 채팅을 할 수 있음
-public class Server extends JFrame implements ActionListener {
-
-	private JButton serverStartBtn;
-	private JButton saveBtn;
-	private JButton sendBtn;
-
-	private JLabel portLabel;
-	private JTextArea outputMessage;
-	private JTextField inputMessage;
-	private JTextField txtport;
-	private ScrollPane scrollPane;
+@Getter
+@Setter
+public class Server {
 
 	private ServerSocket serverSocket;
 	private Socket socket;
 	private int port;
+	
+	private Server mContext = this;
 
-	Vector<User> users = new Vector<User>(); // User 객체 담음
-	Vector<Room> rooms = new Vector<>();
+	Vector<User> users = new Vector<User>();
+	Vector<Room> rooms = new Vector<Room>();
+
+	ServerGUI serverGUI;
 
 	public Server() {
-		initData();
-		initLayout();
-		addListener();
-		txtport.requestFocus();
+		serverGUI = new ServerGUI(this);
 	}
 
-	private void initData() {
-		setTitle("My Talk [ Server ]");
-		setSize(500, 500);
-		setVisible(true);
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		portLabel = new JLabel("포트 번호 : ");
-		saveBtn = new JButton("파일 저장");
-		// sendBtn = new JButton("전송");
-		serverStartBtn = new JButton("서버 시작");
-		inputMessage = new JTextField();
-		outputMessage = new JTextArea();
-		txtport = new JTextField();
-		scrollPane = new ScrollPane();
-
-	}
-
-	private void initLayout() {
-		setLayout(null);
-
-		add(portLabel);
-		add(serverStartBtn);
-		add(txtport);
-		add(inputMessage);
-		add(outputMessage);
-		add(serverStartBtn);
-		// add(sendBtn);
-
-		portLabel.setBounds(40, 5, 70, 30);
-		txtport.setBounds(110, 8, 100, 25);
-
-		//scrollPane.add(outputMessage);
-
-		saveBtn.setBounds(210, 400, 70, 30);
-		serverStartBtn.setBounds(300, 7, 100, 25);
-		outputMessage.setBounds(30, 40, 420, 350);
-	}
-
-	private void startNetWork(int port) {
+	public void startServer(int port) {
 
 		try {
+			serverGUI.getOutputMessage().append("서버를 시작합니다.\n");
 			serverSocket = new ServerSocket(port);
-			outputMessage.append("서버를 시작합니다.\n");
 			System.out.println("서버 소켓 생성");
-			connect();
+			connectClient();
 
 		} catch (IOException e1) {
 			e1.printStackTrace();
+			System.out.println("서버 연결 실패");
 		}
 
 	}
 
-	private void connect() {
+	private void connectClient() {
 
 		new Thread(new Runnable() {
 
@@ -109,15 +51,19 @@ public class Server extends JFrame implements ActionListener {
 			public void run() {
 				while (true) {
 					try {
-						outputMessage.append("접속 대기 중\n");
-						socket = serverSocket.accept(); // 계속 대기
-						User user = new User(socket);
+						serverGUI.getOutputMessage().append("사용자 접속 대기...\n");
+						socket = serverSocket.accept();
+
+						User user = new User(mContext, socket);
+						serverGUI.getOutputMessage().append("[ " + user.getUserName() + " ] 님이 입장하셨습니다.\n");
+						
 						user.start();
 						users.add(user);
-						System.out.println("유저 생성 및 벡터 추가");
+
 
 					} catch (IOException e) {
 						e.printStackTrace();
+						System.out.println("서버 중지");
 						break;
 					}
 
@@ -135,171 +81,69 @@ public class Server extends JFrame implements ActionListener {
 		}
 	}
 
-	// 내부클래스
-	class User extends Thread {
+	public void getProtocol(String str) {
+		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
 
-		private InputStream inputStream;
-		private OutputStream outputStream;
-		private DataInputStream dataInputStream;
-		private DataOutputStream dataOutputStream;
-		String userName;
-		String myCurrentRoom;
-		private Socket userSocket;
+		String protocol = stringTokenizer.nextToken();
+		String message = stringTokenizer.nextToken();
 
-		private boolean roomCheck = true;
+		if (protocol.equals("Whisper")) { // 귓속말
+			stringTokenizer = new StringTokenizer(message, "@");
+			String targetUser = stringTokenizer.nextToken();
+			String content = stringTokenizer.nextToken();
 
-		public User(Socket socket) {
-			this.userSocket = socket;
-			network();
-		}
-
-		private void network() {
-			try {
-				inputStream = userSocket.getInputStream();
-				dataInputStream = new DataInputStream(inputStream);
-				outputStream = userSocket.getOutputStream();
-				dataOutputStream = new DataOutputStream(outputStream);
-
-				userName = dataInputStream.readUTF(); // 처음 입장시 아이디 입력받음
-				outputMessage.append("[ " + userName + " ] 입장\n");
-
-				// 기존사용자들에게 신규 유저의 접속을 알린다.
-				broadcast("NewUser/" + userName);
-
-				// 사용자에게 자신을 알린후 벡터에 자신을 추가한다.
-				users.add(this);
-
-			} catch (IOException e) {
-				e.printStackTrace();
+			for (int i = 0; i < users.size(); i++) {
+				User user = users.get(i);
+				if (user.getName().equals(user)) {
+					user.sendMessage("Whisper/" + user.getName() + "@" + content);
+				} else {
+					System.out.println("존재하지 않는 사용자입니다.");
+				}
 			}
-		}
+		} else if (protocol.equals("CreateRoom")) {
+			for (int i = 0; i < rooms.size(); i++) {
+				Room room = rooms.get(i);
 
-		@Override
-		public void run() {
-
-			new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					while (true) {
-						try {
-							String msg = dataInputStream.readUTF();
-							outputMessage.append("[" + userName + "]" + msg + "\n");
-							System.out.println("User msg : " + msg);
-							receiveMessage(msg);
-							broadcast(msg);
-						} catch (Exception e) {
-							outputMessage.append(userName + " : 사용자접속끊어짐\n");
-						}
-					}
-
+				// 같은 이름의 방 존재여부 확인
+				if (room.roomTitle.equals(room.roomTitle)) {
+					//user.sendMessage("CreateRoomFail/ok");
+					break;
+				} else {
+					//Room newRoom = new Room(message, user);
+					//rooms.add(newRoom);
+					//user.sendMessage("CreateRoom/" + room.roomTitle);
+					broadcast("NewRoom/" + message);
 				}
-			}).start();
-		}
-
-		// 프로토콜 확인
-		public void receiveMessage(String msg) {
-			StringTokenizer stringTokenizer = new StringTokenizer(msg, "/");
-
-			String protocol = stringTokenizer.nextToken();
-			String message = stringTokenizer.nextToken();
-
-			if (protocol.equals("Whisper")) { // 귓속말 기능
-				for (int i = 0; i < users.size(); i++) {
-					User user = users.get(i);
-					if (this.getName().equals(user)) {
-						sendMessage("w/" + user.getName() + "@" + msg);
-					}
+			}
+		} else if (protocol.equals("JoinRoom")) {
+			for (int i = 0; i < rooms.size(); i++) {
+				Room room = rooms.elementAt(i);
+				if (room.roomTitle.equals(message)) {
+					//room.broadcastRoom("Chatting/ [ " + user.getName() + " ] 님이 입장하셨습니다.");
+					//room.addUser(user);
+					//user.sendMessage("JoinRoom/" + message);
 				}
-			} else if (protocol.equals("CreateRoom")) {
-				for (int i = 0; i < rooms.size(); i++) {
-					Room room = rooms.get(i);
-					if (room.roomTitle.equals(room.roomTitle)) { // 같은 방 이름 존재여부 확인
-						sendMessage("CreateRoomFail/ok");
-						break;
-					} else {
-						sendMessage("CreateRoom/" + message);
-						broadcast("NewRoom/" + message);
-					}
-				}
-			} else if (protocol.equals("JoinRoom")) {
-				for (int i = 0; i < rooms.size(); i++) {
-					Room room = rooms.elementAt(i);
-					if (room.roomTitle.equals(message)) {
-						room.broadcastRoom("Chatting/ [ " + userName + " ] 입장");
-						room.addUser(this);
-						sendMessage("JoinRoom/" + message);
-						break;
-					}
-				}
-			} else if (protocol.equals("OutRoom")) {
+			}
+		} else if (protocol.equals("Chatting")) {
+			String msg = stringTokenizer.nextToken();
+			for (int i = 0; i < rooms.size(); i++) {
+				Room room = rooms.elementAt(i);
 
-			} else if (protocol.equals("Chatting")) {
-				String chatMsg = stringTokenizer.nextToken();
-				for (int i = 0; i < rooms.size(); i++) {
-					Room room = rooms.elementAt(i);
-					if (room.roomTitle.equals(message)) {
-						room.broadcastRoom("Chatting/" + userName + "/" + chatMsg);
-					}
+				// 채팅 방 이름 확인해서 해당하는 채팅방에 메시지 띄우기
+				if (room.roomTitle.equals(message)) {
+					//room.broadcastRoom("Chatting/" + user.getName() + "/" + msg);
+				}
+			}
+		} else if (protocol.equals("ExitRoom")) {
+			for (int i = 0; i < rooms.size(); i++) {
+				Room room = rooms.elementAt(i);
+				if (room.roomTitle.equals(message)) {
+
 				}
 			}
 		}
-
-		private void sendMessage(String msg) {
-			try {
-				dataOutputStream.writeUTF(msg);
-				dataOutputStream.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
-
-	// 내부 클래스
-	class Room {
-
-		String roomTitle;
-		Vector<User> roomUser = new Vector<User>();
-
-		public Room(String roomName, User user) {
-			this.roomTitle = roomName;
-			this.roomUser.add(user);
-
-			user.myCurrentRoom = roomName;
-		}
-
-		private void broadcastRoom(String str) {
-			for (int i = 0; i < roomUser.size(); i++) {
-				User user = roomUser.elementAt(i);
-				user.sendMessage(str);
-			}
-		}
-
-		private void addUser(User user) {
-			roomUser.add(user);
-		}
-
-	}
-
-	private void addListener() {
-		serverStartBtn.addActionListener(this);
-		saveBtn.addActionListener(this);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		JButton selectedBtn = (JButton) e.getSource();
-		if (selectedBtn == serverStartBtn) {
-			System.out.println("서버 실행");
-			port = Integer.parseInt(txtport.getText().trim());
-			startNetWork(port);
-		} else if (selectedBtn == saveBtn) {
-			JOptionPane.showMessageDialog(null, "파일 저장 완료", "알림", JOptionPane.CLOSED_OPTION);
-			// saveFile();
-		}
-
-	}
+	
 
 	public static void main(String[] args) {
 		new Server();
