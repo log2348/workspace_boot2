@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MyClient extends JFrame implements ActionListener {
+public class Client extends JFrame implements ActionListener {
 
 	private Socket socket;
 	private String ip = "127.0.0.1";
@@ -28,7 +28,7 @@ public class MyClient extends JFrame implements ActionListener {
 
 	private InputStream inputStream;
 	private OutputStream outputStream;
-	private DataInputStream dataInputStream; // 따로 가공하지 않아도됨
+	private DataInputStream dataInputStream;
 	private DataOutputStream dataOutputStream;
 
 	private String userName;
@@ -65,7 +65,7 @@ public class MyClient extends JFrame implements ActionListener {
 
 	StringTokenizer stringTokenizer;
 
-	public MyClient() {
+	public Client() {
 		initData();
 		initLayout();
 		addListener();
@@ -228,8 +228,8 @@ public class MyClient extends JFrame implements ActionListener {
 		String protocol = stringTokenizer.nextToken();
 		String message = stringTokenizer.nextToken();
 
-		System.out.println("프로토콜" + protocol);
-		System.out.println("메세지" + message);
+		System.out.println("프로토콜 : " + protocol);
+		System.out.println("메시지 : " + message);
 
 		if (protocol.equals("NewUser")) {
 
@@ -331,7 +331,7 @@ public class MyClient extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new MyClient();
+		new Client();
 	}
 
 }

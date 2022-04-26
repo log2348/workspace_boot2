@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 
 // 서버가 열리고 클라이언트가 접속하면
 // 클라이언트가 유저로 등록되면 채팅을 할 수 있음
-public class MyServer extends JFrame implements ActionListener {
+public class Server extends JFrame implements ActionListener {
 
 	private JButton serverStartBtn;
 	private JButton saveBtn;
@@ -41,7 +41,7 @@ public class MyServer extends JFrame implements ActionListener {
 	Vector<User> users = new Vector<User>(); // User 객체 담음
 	Vector<Room> rooms = new Vector<>();
 
-	public MyServer() {
+	public Server() {
 		initData();
 		initLayout();
 		addListener();
@@ -129,7 +129,7 @@ public class MyServer extends JFrame implements ActionListener {
 	}
 
 	// 서버에 연결된 모든 사용자에게 메시지 보냄
-	public void broadCast(String str) {
+	public void broadcast(String str) {
 		for (int i = 0; i < users.size(); i++) {
 			users.get(i).sendMessage(str);
 		}
@@ -164,7 +164,7 @@ public class MyServer extends JFrame implements ActionListener {
 				outputMessage.append("[ " + userName + " ] 입장\n");
 
 				// 기존사용자들에게 신규 유저의 접속을 알린다.
-				broadCast("NewUser/" + userName);
+				broadcast("NewUser/" + userName);
 
 				// 사용자에게 자신을 알린후 벡터에 자신을 추가한다.
 				users.add(this);
@@ -187,7 +187,7 @@ public class MyServer extends JFrame implements ActionListener {
 							outputMessage.append("[" + userName + "]" + msg + "\n");
 							System.out.println("User msg : " + msg);
 							receiveMessage(msg);
-							broadCast(msg);
+							broadcast(msg);
 						} catch (Exception e) {
 							outputMessage.append(userName + " : 사용자접속끊어짐\n");
 						}
@@ -197,6 +197,7 @@ public class MyServer extends JFrame implements ActionListener {
 			}).start();
 		}
 
+		// 프로토콜 확인
 		public void receiveMessage(String msg) {
 			StringTokenizer stringTokenizer = new StringTokenizer(msg, "/");
 
@@ -217,14 +218,17 @@ public class MyServer extends JFrame implements ActionListener {
 						sendMessage("CreateRoomFail/ok");
 						break;
 					} else {
-						sendMessage("CreateRoom/" + room.roomTitle);
+						sendMessage("CreateRoom/" + message);
+						broadcast("NewRoom/" + message);
 					}
 				}
 			} else if (protocol.equals("JoinRoom")) {
 				for (int i = 0; i < rooms.size(); i++) {
 					Room room = rooms.elementAt(i);
 					if (room.roomTitle.equals(message)) {
-						sendMessage("CreateRoomFail/ok");
+						room.broadcastRoom("Chatting/ [ " + userName + " ] 입장");
+						room.addUser(this);
+						sendMessage("JoinRoom/" + message);
 						break;
 					}
 				}
@@ -235,7 +239,7 @@ public class MyServer extends JFrame implements ActionListener {
 				for (int i = 0; i < rooms.size(); i++) {
 					Room room = rooms.elementAt(i);
 					if (room.roomTitle.equals(message)) {
-						room.roomBroadcast("Chatting/" + userName + "/" + chatMsg);
+						room.broadcastRoom("Chatting/" + userName + "/" + chatMsg);
 					}
 				}
 			}
@@ -265,7 +269,7 @@ public class MyServer extends JFrame implements ActionListener {
 			user.myCurrentRoom = roomName;
 		}
 
-		private void roomBroadcast(String str) {
+		private void broadcastRoom(String str) {
 			for (int i = 0; i < roomUser.size(); i++) {
 				User user = roomUser.elementAt(i);
 				user.sendMessage(str);
@@ -276,43 +280,9 @@ public class MyServer extends JFrame implements ActionListener {
 			roomUser.add(user);
 		}
 
-		@Override
-		public String toString() {
-			return roomTitle;
-		}
-
-		private void removeRoom(User u) {
-			roomUser.remove(u);
-			boolean empty = roomUser.isEmpty();
-			if (empty) {
-				for (int i = 0; i < rooms.size(); i++) {
-					Room room = rooms.elementAt(i);
-					if (room.roomTitle.equals(roomTitle)) {
-						rooms.remove(this);
-						broadCast("EmptyRoom/" + roomTitle);
-						broadCast("UserData_Updata/ok");
-						break;
-					}
-				}
-			}
-		}
 	}
 
-	/*
-	 * public void saveFile() { BufferedReader bufferedReader = new
-	 * BufferedReader(new InputStreamReader(socket.getInputStream()));
-	 * 
-	 * try (BufferedWriter bw = new BufferedWriter(new FileWriter("message.txt",
-	 * true))) { String msg = bufferedReader.readLine(); bw.write(msg + "\n");
-	 * bw.flush();
-	 * 
-	 * } catch (Exception e) { e.printStackTrace(); }
-	 * 
-	 * }
-	 */
-
 	private void addListener() {
-		// sendBtn.addActionListener(this);
 		serverStartBtn.addActionListener(this);
 		saveBtn.addActionListener(this);
 	}
@@ -332,7 +302,7 @@ public class MyServer extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new MyServer();
+		new Server();
 	}
 
 }

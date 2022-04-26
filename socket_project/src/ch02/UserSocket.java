@@ -12,12 +12,12 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
 
-import ch02.MyServer.Room;
-import ch02.MyServer.User;
+import ch02.Server.Room;
+import ch02.Server.User;
 
 public class UserSocket extends Thread {
 
-	MyServer mContext;
+	Server mContext;
 	private Socket userSocket;
 
 	private BufferedReader bufferedReader;
@@ -30,7 +30,7 @@ public class UserSocket extends Thread {
 
 	private String name;
 
-	public UserSocket(MyServer mContext, Socket socket) {
+	public UserSocket(Server mContext, Socket socket) {
 		this.mContext = mContext;
 		this.userSocket = socket;
 
@@ -61,7 +61,7 @@ public class UserSocket extends Thread {
 						// mContext.outputMessage.append("[" + name + "]" + msg + "\n");
 						System.out.println("User msg : " + msg);
 						receiveMessage(msg);
-						mContext.broadCast(msg);
+						mContext.broadcast(msg);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

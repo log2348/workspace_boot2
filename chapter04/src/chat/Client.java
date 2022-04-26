@@ -1,4 +1,4 @@
-package socket_pratice;
+package chat;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
