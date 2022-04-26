@@ -1,4 +1,4 @@
-package ch02;
+package ch03;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,7 +95,7 @@ public class MyClient extends JFrame implements ActionListener {
 		totalRoomList.setBounds(270, 70, 200, 300);
 		
 		totalRoomLabel = new JLabel("전체 방");
-		totalRoomLabel.setBounds(170, 30, 150, 50);
+		totalRoomLabel.setBounds(200, 30, 150, 50);
 		
 		totalUserLabel = new JLabel("전체 접속자");
 		totalUserLabel.setBounds(20, 30, 150, 50);	
@@ -132,11 +132,10 @@ public class MyClient extends JFrame implements ActionListener {
 		outputMessage.setBounds(30, 100, 400, 400);
 		sendBtn.setBounds(370, 500, 70, 30);
 		outRoomBtn.setBounds(370, 600, 100, 30);
-		
-		enterRoomBtn.setBounds(350, 450, 100, 30);
+		enterRoomBtn.setBounds(350, 350, 100, 30);
 		makeRoomBtn.setBounds(350, 400, 100, 30);
 		
-		txtRoomTitle.setBounds(20, 320, 400, 25);
+		txtRoomTitle.setBounds(10, 300, 100, 30);
 
 		logInPanel.add(logInBtn);
 		logInPanel.add(ipLabel);

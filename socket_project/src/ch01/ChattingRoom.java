@@ -13,16 +13,18 @@ public class ChattingRoom {
 	
 	private User user;
 	
-	private Vector<User> rooms = new Vector();
+	private Vector<User> roomUser = new Vector();
 	
-	public ChattingRoom(User user) {
-		this.user = user;
+	public ChattingRoom(String roomTitle, User user) {
+		this.roomTitle = roomTitle;
+		this.roomUser.add(user);
+		
 		
 	}
 	
 	private void broadcastRoom(String msg) {
-		for (int i = 0; i < rooms.size(); i++) {
-			user = rooms.elementAt(i);
+		for (int i = 0; i < roomUser.size(); i++) {
+			user = roomUser.elementAt(i);
 			user.sendMessage(msg);
 		}
 	}

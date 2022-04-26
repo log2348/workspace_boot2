@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,7 +25,6 @@ public class MyServer extends JFrame implements ActionListener {
 	private JTextArea outputMessage;
 	private JTextField inputMessage;
 	private JTextField txtport;
-	private ScrollPane scrollPane;
 
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -37,8 +35,8 @@ public class MyServer extends JFrame implements ActionListener {
 	private BufferedWriter bufferedWriter; // 클라이언트에게 메시지 보내기
 	private BufferedReader keyboardBufferedReader; // 키보드에서 데이터 읽어옴
 
-	//private ChattingRoom chattingRoom;
-	Vector<User> users = new Vector<User>(); // User 객체 담음
+	private ChattingRoom chattingRoom;
+	private User user;
 
 	public MyServer() {
 		initData();
@@ -61,7 +59,6 @@ public class MyServer extends JFrame implements ActionListener {
 		inputMessage = new JTextField();
 		outputMessage = new JTextArea();
 		txtport = new JTextField();
-		scrollPane = new ScrollPane();
 
 	}
 
@@ -75,14 +72,14 @@ public class MyServer extends JFrame implements ActionListener {
 		add(outputMessage);
 		add(serverStartBtn);
 		add(sendBtn);
+		add(saveBtn);
 
 		portLabel.setBounds(40, 5, 70, 30);
 		txtport.setBounds(110, 8, 100, 25);
 
-		// scrollPane.add(outputMessage);
-
 //		saveBtn.setBounds(200, 400, 100, 40);
 		sendBtn.setBounds(400, 400, 70, 30);
+		saveBtn.setBounds(400, 300, 100, 30);
 		serverStartBtn.setBounds(300, 7, 100, 25);
 		outputMessage.setBounds(30, 40, 420, 350);
 		inputMessage.setBounds(30, 400, 370, 30);
@@ -102,19 +99,24 @@ public class MyServer extends JFrame implements ActionListener {
 	}
 	
 	private void connect() {
-		
-		while(true) {
-			try {
-				outputMessage.append("접속 대기 중\n");
-				socket = serverSocket.accept();
-				
-				new Thread(new ReceiveThread()).start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		new Thread(new Runnable() {
 			
-		}
-		
+			@Override
+			public void run() {
+				try {
+					outputMessage.append("접속 대기 중\n");
+					socket = serverSocket.accept();				
+					user = new User(socket);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				User user = new User(socket);
+
+				System.out.println("클라이언트 연결됨");
+				
+			}
+		}).start();
 	}
 
 	// 클라이언트에게 메시지 보내는 쓰레드

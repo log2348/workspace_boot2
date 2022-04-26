@@ -7,9 +7,13 @@ import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,16 +29,15 @@ public class MyClient extends JFrame implements ActionListener {
 	private Socket socket;
 	private String ip = "127.0.0.1";
 	private int port;
-
-	private DataInputStream dataInputStream; // 따로 가공하지 않아도됨
+	
+	private DataInputStream dataInputStream;
 	private DataOutputStream dataOutputStream;
-	// String형으로 버퍼에 저장
-	private BufferedWriter bufferedWriter; // 유저가 입력한 데이터 출력
-	private BufferedReader keyboardReader; // 유저가 키보드에 입력한 데이터 읽기
-	private BufferedReader bufferedReader; // 유저가 입력한 데이터 읽기
+	private InputStream inputStream;
+	private OutputStream outputStream;
 
 	private JButton logInBtn;
 	private JButton sendBtn;
+	private JButton makeRoomBtn;
 	private JLabel ipLabel;
 	private JLabel portLabel;
 	private JLabel userNameLabel;
@@ -48,6 +51,9 @@ public class MyClient extends JFrame implements ActionListener {
 	private JLabel chatPanel; // 채팅 창
 	private JList<User> totalUserList;
 	private JList<ChattingRoom> totalRoomList;
+	
+	private Vector<User> users = new Vector<>();
+	private Vector<ChattingRoom> rooms = new Vector<ChattingRoom>();
 
 	private User user;
 
@@ -82,9 +88,10 @@ public class MyClient extends JFrame implements ActionListener {
 
 		logInBtn = new JButton("로그인");
 		sendBtn = new JButton("전송");
+		makeRoomBtn = new JButton("방 만들기");
 
-		totalRoomList = new JList<ChattingRoom>();
-		totalUserList = new JList<User>();
+//		totalRoomList = new JList<ChattingRoom>();
+//		totalUserList = new JList<User>();
 
 	}
 
@@ -94,6 +101,8 @@ public class MyClient extends JFrame implements ActionListener {
 
 		logInBtn.setBounds(180, 300, 100, 30);
 		sendBtn.setBounds(10, 400, 100, 30);
+		makeRoomBtn.setBounds(10, 10, 100, 30);
+		
 		ipLabel.setBounds(50, 50, 70, 30);
 		portLabel.setBounds(50, 100, 70, 30);
 		userNameLabel.setBounds(50, 150, 70, 30);
@@ -113,8 +122,8 @@ public class MyClient extends JFrame implements ActionListener {
 
 		chatPanel.add(inputMessage);
 		chatPanel.add(outputMessage);
-		chatPanel.add(totalRoomList);
-		chatPanel.add(totalUserList);
+		//chatPanel.add(totalRoomList);
+		//chatPanel.add(totalUserList);
 		chatPanel.add(sendBtn);
 
 		add(logInPanel);
@@ -127,18 +136,7 @@ public class MyClient extends JFrame implements ActionListener {
 		try {
 			// 클라이언트 소켓 생성
 			socket = new Socket(ip, port);
-			
-			dataInputStream = new DataInputStream(socket.getInputStream());
-			bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			dataOutputStream = new DataOutputStream(socket.getOutputStream());
-			
-			// 유저네임 받아오기
-			String userName = bufferedReader.readLine();
-			
-			dataOutputStream.writeUTF(userName);
-			
-			new Thread(new SendThread()).start();
-
+			connectStream();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("연결 실패");
@@ -146,60 +144,83 @@ public class MyClient extends JFrame implements ActionListener {
 	}
 
 	private void connectStream() {
-
-		String userName = txtUserName.getText().trim();
-		user.getUsers().add(user);
-		sendMessage(userName);
-		totalUserList.setListData(user.users);
-
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						// 서버로부터 메시지 받기
-						String msg = bufferedReader.readLine();
-						receiveMessage(msg);
-					} catch (Exception e) {
-						System.out.println("서버 종료");
-						e.printStackTrace();
+		
+		try {
+			inputStream = socket.getInputStream();
+			dataInputStream = new DataInputStream(inputStream);
+			outputStream = socket.getOutputStream();
+			dataOutputStream = new DataOutputStream(outputStream);
+			
+			String userName = txtUserName.getText().trim();
+			sendMessage(userName);
+			//totalUserList.setListData(user.users);
+			
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							// 서버로부터 메시지 받기
+							String msg = dataInputStream.readLine();
+							receiveMessage(msg);
+						} catch (Exception e) {
+							System.out.println("서버 종료");
+							e.printStackTrace();
+						}
 					}
+					
 				}
+			}).start();
+			
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
-			}
-		}).start();
 	}
 
 	// 서버로부터 메시지 받기
 	private void receiveMessage(String msg) {
 
-		new Thread(new Runnable() {
+		StringTokenizer st = new StringTokenizer(msg, "/");
 
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						String msg = bufferedReader.readLine();
-						user.receiveMessage(msg); // 프로토콜로 기능 처리
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+		String protocol = st.nextToken();
+		String message = st.nextToken();
+
+		if (protocol.equals("w")) { // 귓속말 기능
+			for (int i = 0; i < users.size(); i++) {
+				User user = users.get(i);
+				if (this.getName().equals(user)) {
+					user.sendMessage("w/" + user.getName() + "@" + msg);
 				}
-
 			}
-		}).start();
+		} else if (protocol.equals("CreateRoom")) {
+			for (int i = 0; i < rooms.size(); i++) {
+				ChattingRoom room = rooms.get(i);
+				if (room.getRoomTitle().equals(room.getRoomTitle())) { // 같은 방 이름 존재여부 확인
+					sendMessage("CreateRoomFail/ok");
+					break;
+				} else {
+					ChattingRoom newChattingRoom = new ChattingRoom(room.getRoomTitle(), user);
+					rooms.add(newChattingRoom);
+					sendMessage("CreateRoom/" + room.getRoomTitle());
+				}
+			}
+		} else if (protocol.equals("JoinRoom")) {
+			for(int i = 0; i < rooms.size(); i++) {
+				ChattingRoom room = rooms.elementAt(i);
+				if(room.getRoomTitle().equals(message)) {
+					sendMessage("CreateRoomFail/ok");
+					break;
+				}
+			}
+		} 
 	}
 
 	private void sendMessage(String msg) {
 		try {
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			// 키보드 연결
-			keyboardReader = new BufferedReader(new InputStreamReader(System.in));
-			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-			bufferedWriter.write(msg);
-			bufferedWriter.flush();
+			dataOutputStream.writeUTF(msg);
+			dataOutputStream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -207,6 +228,7 @@ public class MyClient extends JFrame implements ActionListener {
 
 	private void addListener() {
 		logInBtn.addActionListener(this);
+		sendBtn.addActionListener(this);
 	}
 
 	@Override
@@ -239,6 +261,15 @@ public class MyClient extends JFrame implements ActionListener {
 				chatPanel.add(outputMessage);
 				chatPanel.add(totalRoomList);
 				chatPanel.add(totalUserList);
+			}
+		} else if (selectedBtn == sendBtn) {
+			System.out.println("전송 버튼 클릭");
+			sendMessage("Chatting/");
+		} else if (selectedBtn == makeRoomBtn) {
+			System.out.println("방 생성");
+			String roomTitle = JOptionPane.showInputDialog("방 이름을 입력하세요");
+			if(roomTitle != null) {
+				sendMessage("CreateRoom/" + roomTitle);
 			}
 		}
 

@@ -1,4 +1,4 @@
-package ch01;
+package ch03;
 
 public interface Chat {
 	
@@ -6,6 +6,6 @@ public interface Chat {
 	
 	void createRoom(String roomTitle);
 	
-	void joinRoom(String roomTitle);
+	void deleteRoom(String roomTitle);
 
 }

@@ -14,10 +14,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements Chat {
-	/*
-	 * 서버에서 ReceiveThread 생성되면 User가 등록되고,
-	 * User 클래스가 화면에 보이는 메시지 전달, 방만들기 가능하도록
-	 */
 
 	private String name;
 	private Socket userSocket;
@@ -31,23 +27,6 @@ public class User implements Chat {
 	Vector<User> users = new Vector<User>();
 
 	public User(Socket socket) {
-		this.userSocket = socket;
-
-//		try {
-//			bufferedReader = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
-//			this.name = bufferedReader.readLine();
-//			users.add(this);
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		} finally {
-//			try {
-//				bufferedReader.close();
-//				bufferedWriter.close();
-//				socket.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
 
 	}
 
@@ -70,14 +49,27 @@ public class User implements Chat {
 				sendMessage("CreateRoomFail/ok");
 				break;
 			} else {
-				ChattingRoom newChattingRoom = new ChattingRoom(this);
+				ChattingRoom newChattingRoom = new ChattingRoom(room.getRoomTitle(), this);
 				rooms.add(newChattingRoom);
 				sendMessage("CreateRoom/" + roomTitle);
 			}
 		}
 
 	}
-
+	
+	@Override
+	public void joinRoom(String roomTitle) {
+//		for(int i = 0; i < rooms.size(); i++) {
+//			ChattingRoom room = rooms.elementAt(i);
+//			if(room.getRoomTitle().equals(message)) {
+//				sendMessage("CreateRoomFail/ok");
+//				break;
+//			}
+//		}
+		
+	}
+	
+	/*
 	@Override
 	public void deleteRoom(String roomTitle) {
 		for (int i = 0; i < chattingRoom.getRooms().size(); i++) {
@@ -91,6 +83,7 @@ public class User implements Chat {
 		}
 
 	}
+	*/
 
 	public void sendMessage(String msg) {
 		try {
@@ -101,6 +94,7 @@ public class User implements Chat {
 		}
 	}
 
+	
 	public void receiveMessage(String msg) {
 		StringTokenizer st = new StringTokenizer(msg, "/");
 
@@ -108,12 +102,36 @@ public class User implements Chat {
 		String message = st.nextToken();
 
 		if (protocol.equals("w")) { // 귓속말 기능
-			whisper(message);
+			for (int i = 0; i < users.size(); i++) {
+				User user = users.get(i);
+				if (this.getName().equals(user)) {
+					user.sendMessage("w/" + name + "@" + msg);
+				}
+			}
 		} else if (protocol.equals("CreateRoom")) {
-			createRoom(message);
-		} else if (protocol.equals("deleteRoom")) {
-			deleteRoom(message);
+			for (int i = 0; i < rooms.size(); i++) {
+				ChattingRoom room = rooms.get(i);
+				if (room.getRoomTitle().equals(room.getRoomTitle())) { // 같은 방 이름 존재여부 확인
+					sendMessage("CreateRoomFail/ok");
+					break;
+				} else {
+					ChattingRoom newChattingRoom = new ChattingRoom(room.getRoomTitle(), this);
+					rooms.add(newChattingRoom);
+					sendMessage("CreateRoom/" + room.getRoomTitle());
+				}
+			}
+		} else if (protocol.equals("JoinRoom")) {
+			for(int i = 0; i < rooms.size(); i++) {
+				ChattingRoom room = rooms.elementAt(i);
+				if(room.getRoomTitle().equals(message)) {
+					sendMessage("CreateRoomFail/ok");
+					break;
+				}
+			}
+		} else if(protocol.equals("JoinRoom")) {
+			
 		}
 	}
+
 
 }
