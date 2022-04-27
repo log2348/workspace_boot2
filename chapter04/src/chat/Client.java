@@ -282,14 +282,18 @@ public class Client extends JFrame implements ActionListener {
 		if (protocol.equals("NewUser")) {
 			user_Vclist.add(message);
 			totalList_lst.setListData(user_Vclist);
+			
+			
 		} else if (protocol.equals("OldUser")) {
 			user_Vclist.add(message);
 			totalList_lst.setListData(user_Vclist);
+			
+			
 		} else if (protocol.equals("Note")) {
 			st = new StringTokenizer(message, "@");
 			String user = st.nextToken();
 			String note = st.nextToken();
-			JOptionPane.showMessageDialog(null, note, user + "로 부터 온 메세지", JOptionPane.CLOSED_OPTION);
+			JOptionPane.showMessageDialog(null, note, "[ " + user + " ] 님의 쪽지", JOptionPane.CLOSED_OPTION);
 		} else if (protocol.equals("CreateRoom")) {
 			// 방만들기가 성공했을 경우
 			my_roomName = message;
@@ -336,7 +340,6 @@ public class Client extends JFrame implements ActionListener {
 			dos.writeUTF(msg);
 			dos.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

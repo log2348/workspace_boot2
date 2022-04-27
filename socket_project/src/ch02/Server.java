@@ -14,18 +14,19 @@ import lombok.Setter;
 public class Server {
 
 	private ServerSocket serverSocket;
-	private Socket socket;
 	private int port;
-	
+
 	private Server mContext = this;
 
-	Vector<User> users = new Vector<User>();
+	Vector<UserSocket> users = new Vector<UserSocket>();
 	Vector<Room> rooms = new Vector<Room>();
 
 	ServerGUI serverGUI;
+	ClientGUI clientGUI;
 
 	public Server() {
 		serverGUI = new ServerGUI(this);
+
 	}
 
 	public void startServer(int port) {
@@ -52,14 +53,14 @@ public class Server {
 				while (true) {
 					try {
 						serverGUI.getOutputMessage().append("사용자 접속 대기...\n");
-						socket = serverSocket.accept();
+						Socket socket = serverSocket.accept();
+						System.out.println("사용자 소켓 생성");
+						UserSocket userSocket = new UserSocket(mContext, socket);
 
-						User user = new User(mContext, socket);
-						serverGUI.getOutputMessage().append("[ " + user.getUserName() + " ] 님이 입장하셨습니다.\n");
+//						users.add(userSocket);
+						userSocket.start();
+
 						
-						user.start();
-						users.add(user);
-
 
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -74,76 +75,98 @@ public class Server {
 
 	}
 
+	// 새로 들어온 유저에게 기존 데이터 띄워지도록
+	public void updateInfo() {
+
+//		if (users.size() > 0 && rooms.size() > 0) {
+//			for (int i = 0; i < users.size(); i++) {
+//				UserSocket userSocket = users.elementAt(i);
+//				sendMessage("OldUser/" + userSocket.getUserName());
+//			}
+//			for (int i = 0; i < rooms.size(); i++) {
+//				Room room = rooms.elementAt(i);
+//				sendMessage("OldRoom/" + room.roomTitle);
+//			}
+
+//		}
+
+	}
+
 	// 서버에 연결된 모든 사용자에게 메시지 보냄
 	public void broadcast(String str) {
 		for (int i = 0; i < users.size(); i++) {
-			users.get(i).sendMessage(str);
+			UserSocket userSocket = users.elementAt(i);
+			userSocket.sendMessage(str);
 		}
 	}
+	
 
+	// 프로토콜 별 동작 수행하도록
 	public void getProtocol(String str) {
 		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
 
 		String protocol = stringTokenizer.nextToken();
 		String message = stringTokenizer.nextToken();
 
-		if (protocol.equals("Whisper")) { // 귓속말
+		switch (protocol) {
+		case "Whisper":
 			stringTokenizer = new StringTokenizer(message, "@");
 			String targetUser = stringTokenizer.nextToken();
 			String content = stringTokenizer.nextToken();
 
 			for (int i = 0; i < users.size(); i++) {
-				User user = users.get(i);
-				if (user.getName().equals(user)) {
-					user.sendMessage("Whisper/" + user.getName() + "@" + content);
+				UserSocket userSocket = users.get(i);
+				if (userSocket.getName().equals(userSocket)) {
+					userSocket.sendMessage("Whisper/" + userSocket.getName() + "@" + content);
 				} else {
 					System.out.println("존재하지 않는 사용자입니다.");
 				}
 			}
-		} else if (protocol.equals("CreateRoom")) {
+			break;
+
+		case "CreateRoom":
 			for (int i = 0; i < rooms.size(); i++) {
 				Room room = rooms.get(i);
 
 				// 같은 이름의 방 존재여부 확인
 				if (room.roomTitle.equals(room.roomTitle)) {
-					//user.sendMessage("CreateRoomFail/ok");
+					//sendMessage("CreateRoomFail/ok");
 					break;
 				} else {
-					//Room newRoom = new Room(message, user);
-					//rooms.add(newRoom);
-					//user.sendMessage("CreateRoom/" + room.roomTitle);
+					Room newRoom = new Room(message, users.get(i));
+					rooms.add(newRoom);
+					//sendMessage("CreateRoom/" + room.roomTitle);
 					broadcast("NewRoom/" + message);
 				}
 			}
-		} else if (protocol.equals("JoinRoom")) {
+			break;
+
+		case "EnterRoom":
 			for (int i = 0; i < rooms.size(); i++) {
 				Room room = rooms.elementAt(i);
 				if (room.roomTitle.equals(message)) {
-					//room.broadcastRoom("Chatting/ [ " + user.getName() + " ] 님이 입장하셨습니다.");
-					//room.addUser(user);
-					//user.sendMessage("JoinRoom/" + message);
+					room.broadcastRoom("Chatting/ [ " + users.get(i).getName() + " ] 님이 입장하셨습니다.");
+					room.addUser(users.get(i));
+					//sendMessage("EnterRoom/" + message);
 				}
 			}
-		} else if (protocol.equals("Chatting")) {
+			break;
+
+		case "Chatting":
 			String msg = stringTokenizer.nextToken();
 			for (int i = 0; i < rooms.size(); i++) {
 				Room room = rooms.elementAt(i);
 
 				// 채팅 방 이름 확인해서 해당하는 채팅방에 메시지 띄우기
 				if (room.roomTitle.equals(message)) {
-					//room.broadcastRoom("Chatting/" + user.getName() + "/" + msg);
+					room.broadcastRoom("Chatting/" + users.get(i).getUserName() + "/" + msg);
 				}
 			}
-		} else if (protocol.equals("ExitRoom")) {
-			for (int i = 0; i < rooms.size(); i++) {
-				Room room = rooms.elementAt(i);
-				if (room.roomTitle.equals(message)) {
+			break;
 
-				}
-			}
 		}
+
 	}
-	
 
 	public static void main(String[] args) {
 		new Server();

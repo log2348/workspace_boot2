@@ -4,24 +4,26 @@ import java.util.Vector;
 
 public class Room {
 
+	Server mContext;
 	String roomTitle;
-	Vector<User> roomUser = new Vector<User>();
+	Vector<UserSocket> roomUser = new Vector<UserSocket>();
 
-	public Room(String roomTitle, User user) {
+	public Room(String roomTitle, UserSocket userSocket) {
 		this.roomTitle = roomTitle;
-		this.roomUser.add(user);
+		this.roomUser.add(userSocket);
 
-		user.setRoomTitle(roomTitle);
+		userSocket.setRoomTitle(roomTitle);
 	}
 
 	public void broadcastRoom(String str) {
 		for (int i = 0; i < roomUser.size(); i++) {
-			User user = roomUser.elementAt(i);
-			user.sendMessage(str);
+			UserSocket userSocket = roomUser.elementAt(i);
+			userSocket.sendMessage(str);
 		}
 	}
 
-	public void addUser(User user) {
+	public void addUser(UserSocket user) {
 		roomUser.add(user);
 	}
+
 }

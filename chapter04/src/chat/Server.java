@@ -205,10 +205,13 @@ public class Server extends JFrame implements ActionListener {
 					UserInformation uinf = vc.elementAt(i);
 					sendMessage("OldUser/" + uinf.nickName);
 				}
+				
 				for (int i = 0; i < vc_room.size(); i++) {
 					RoomInformation room = vc_room.elementAt(i);
 					sendMessage("OldRoom/" + room.roomName);
 				}
+				
+				
 
 				// 사용자에게 자신을 알린후 벡터에 자신을 추가한다.
 				vc.add(this);
