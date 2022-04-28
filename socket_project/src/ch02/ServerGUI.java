@@ -85,18 +85,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 		saveBtn.addActionListener(this);
 	}
 
-	private void saveFile() {
 
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter("from_client.txt", true))) {
-			//String msg = new BufferedReader(new InputStreamReader());
-			//bw.write(msg + "\n");
-			bw.flush();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -107,7 +96,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 			server.startServer(server.getPort());
 		} else if (selectedBtn == saveBtn) {
 			JOptionPane.showMessageDialog(null, "파일 저장 완료", "알림", JOptionPane.CLOSED_OPTION);
-			saveFile();
+			server.saveFile();
 		}
 
 	}

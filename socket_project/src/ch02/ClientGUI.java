@@ -232,10 +232,12 @@ public class ClientGUI extends JFrame implements ActionListener {
 			}
 
 		} else if (selectedBtn == sendBtn) {
-			System.out.println("클라이언트가 메시지 전송");
-			client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + client.getUserName() + "/" + inputMessage.getText());
+			System.out.println("채팅 전송");
+			if(inputMessage.getText() != null) {
+				client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + client.getUserName() + "/" + inputMessage.getText());
+				inputMessage.setText(null);
+			}
 			//outputMessage.append(client.getUserName() + " : " + inputMessage.getText() + "\n");
-			inputMessage.setText(null);
 
 		} else if (selectedBtn == createRoomBtn) {
 			System.out.println("방 만들기 버튼 클릭");
@@ -251,7 +253,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (selectedBtn == exitRoomBtn) {
 			System.out.println("방 나가기");
 			client.sendMessage("ExitRoom/" + client.getClientRoomTitle());
-			outputMessage.setText("");
 			//outputMessage.append("[ " + client.getUserName() + " ] 님이 [" + client.getClientRoomTitle() + " ]에서 퇴장하셨습니다.\n");
 			setTitle("[ " + txtUserName.getText() + " ] 님의 SMALL TALK");
 			menuTab.setSelectedComponent(waitingRoomPanel);

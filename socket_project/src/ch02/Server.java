@@ -1,5 +1,7 @@
 package ch02;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -71,12 +73,25 @@ public class Server {
 
 	}
 
-	// 서버에 연결된 모든 사용자에게 메시지 보냄
+	// 서버에 연결된 모든 사용자에게 메시지 출력
 	public void broadcast(String str) {
 		for (int i = 0; i < users.size(); i++) {
 			UserSocket userSocket = users.get(i);
 			userSocket.sendMessage(str);
 		}
+	}
+	
+	//서버 측으로 들어온 데이터를 파일로 저장
+	public void saveFile() {
+
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter("chat_log.txt", true))) {
+			//bw.write(str + "\n");
+			//bw.flush();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static void main(String[] args) {

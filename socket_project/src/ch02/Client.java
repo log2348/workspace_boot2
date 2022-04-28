@@ -112,6 +112,7 @@ public class Client {
 		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
 
 		String protocol = stringTokenizer.nextToken();
+		//String sender = stringTokenizer.nextToken();
 		String message = stringTokenizer.nextToken();
 
 		System.out.println("프로토콜 : " + protocol);
@@ -157,7 +158,8 @@ public class Client {
 			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
 			break;
 		case "ExitRoom":
-			clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
+			//clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
+			clientGUI.getOutputMessage().setText("");
 			clientRoomTitle = "";
 			break;
 		case "OldUser":

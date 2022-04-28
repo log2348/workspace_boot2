@@ -13,7 +13,7 @@
 프로토콜
 
 Whisper 귓속말
-Chatting 채팅
+Chatting 채팅 "Chatting/방이름/유저이름/내용"
 NewUser 
 CreateRoom 방 생성
 EnterRoom 방 입장

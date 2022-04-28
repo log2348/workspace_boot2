@@ -28,9 +28,8 @@ public class UserSocket extends Thread {
 
 	private String userName;
 	private String roomTitle;
-	
+
 	private boolean roomCheck;
-	private boolean chatCheck;
 
 	public UserSocket(Server mContext, Socket socket) {
 		this.socket = socket;
@@ -43,18 +42,7 @@ public class UserSocket extends Thread {
 
 			userName = bufferedReader.readLine();
 
-			for (int i = 0; i < mContext.users.size(); i++) {
-				UserSocket userSocket = mContext.users.get(i);
-				System.out.println("서버에서 확인하는 olduser : " + userSocket.getUserName());
-				sendMessage("OldUser/" + userSocket.getUserName()); // 개별적으로 보내는 메시지
-
-			}
-
-			for (int i = 0; i < mContext.rooms.size(); i++) {
-				Room room = mContext.rooms.get(i);
-				System.out.println("서버가 보내는 기존 방 리스트 : " + room.getRoomTitle());
-				sendMessage("OldRoom/" + room.getRoomTitle()); // 개별적으로 보내는 메시지
-			}
+			updateInfo();
 
 			// 기존 사용자에게 자신을 알린 후 벡터에 자신 추가
 			mContext.broadcast("NewUser/" + userName);
@@ -65,18 +53,6 @@ public class UserSocket extends Thread {
 			System.out.println("사용자 스트림 연결 실패");
 		}
 
-	}
-
-	/*
-	 * 나와 연결되어있는 스트림을 통해서 보내는 개별 메시지
-	 */
-	public void sendMessage(String msg) {
-		try {
-			bufferedWriter.write(msg + "\n");
-			bufferedWriter.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -102,6 +78,22 @@ public class UserSocket extends Thread {
 		}).start();
 
 	}
+	
+	// 새로온 접속자에게 기존 유저들 정보 업데이트
+	private void updateInfo() {
+		for (int i = 0; i < mContext.users.size(); i++) {
+			UserSocket userSocket = mContext.users.get(i);
+			System.out.println("서버에서 확인하는 OldUser : " + userSocket.getUserName());
+			sendMessage("OldUser/" + userSocket.getUserName());
+
+		}
+
+		for (int i = 0; i < mContext.rooms.size(); i++) {
+			Room room = mContext.rooms.get(i);
+			System.out.println("서버가 보내는 기존 방 리스트 : " + room.getRoomTitle());
+			sendMessage("OldRoom/" + room.getRoomTitle());
+		}
+	}
 
 	// 프로토콜 별 동작 수행하도록
 	public void getProtocol(String str) {
@@ -113,7 +105,7 @@ public class UserSocket extends Thread {
 		switch (protocol) {
 		case "Whisper":
 			stringTokenizer = new StringTokenizer(message, "@");
-			
+
 			String targetUser = stringTokenizer.nextToken();
 			String content = stringTokenizer.nextToken();
 
@@ -135,15 +127,15 @@ public class UserSocket extends Thread {
 					sendMessage("CreateRoomFail/");
 					JOptionPane.showMessageDialog(null, "같은 방의 이름이 존재합니다.", "알림", JOptionPane.ERROR_MESSAGE);
 					roomCheck = false;
-				} 
+				}
 			}
-			
-			if(roomCheck) {
+
+			if (roomCheck) {
 				Room newRoom = new Room(message, this);
 				mContext.rooms.add(newRoom);
 				sendMessage("CreateRoom/" + message);
 				mContext.broadcast("NewRoom/" + message);
-				
+
 			}
 
 			break;
@@ -162,25 +154,20 @@ public class UserSocket extends Thread {
 			break;
 
 		case "Chatting":
-			
+
 			String roomTitle = message;
 			String userName = stringTokenizer.nextToken();
 			String msg = stringTokenizer.nextToken();
-			
-			Room room = null;
 
 			for (int i = 0; i < mContext.rooms.size(); i++) {
-				room = mContext.rooms.get(i);
+				Room room = mContext.rooms.get(i);
 
 				// 같은 채팅방 유저들 간에만 채팅 가능
-				if (room.getRoomTitle().equals(message)) {
-					chatCheck = true;
+				if (room.getRoomTitle().equals(roomTitle)) {
+					room.broadcastRoom("Chatting/" + roomTitle + "/" + userName + "/" + msg);
 				}
 			}
-			
-			if(chatCheck) {
-				room.broadcastRoom("Chatting/" + message + "/" + userName + "/" + msg);
-			}
+
 
 			break;
 
@@ -188,12 +175,12 @@ public class UserSocket extends Thread {
 
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room targetRoom = mContext.rooms.get(i);
-				
-				if(targetRoom.getRoomTitle().equals(message)) {
+
+				if (targetRoom.getRoomTitle().equals(message)) {
 					targetRoom.deleteUser(this);
 					setRoomTitle(null);
 					sendMessage("ExitRoom/" + message);
-					targetRoom.broadcastRoom("Chatting/" + message + "/" + this.userName + "/퇴장" );
+					targetRoom.broadcastRoom("Chatting/" + message + "/" + this.userName + "/퇴장");
 				}
 			}
 			break;
@@ -203,6 +190,16 @@ public class UserSocket extends Thread {
 
 		}
 
+	}
+
+	// 나와 연결되어있는 스트림을 통해서 보내는 개별 메시지
+	public void sendMessage(String msg) {
+		try {
+			bufferedWriter.write(msg + "\n");
+			bufferedWriter.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
