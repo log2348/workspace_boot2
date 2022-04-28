@@ -234,10 +234,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (selectedBtn == sendBtn) {
 			System.out.println("채팅 전송");
 			if(inputMessage.getText() != null) {
-				client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + client.getUserName() + "/" + inputMessage.getText());
+				client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + inputMessage.getText());
 				inputMessage.setText(null);
 			}
-			//outputMessage.append(client.getUserName() + " : " + inputMessage.getText() + "\n");
 
 		} else if (selectedBtn == createRoomBtn) {
 			System.out.println("방 만들기 버튼 클릭");

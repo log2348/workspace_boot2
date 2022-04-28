@@ -2,13 +2,11 @@ package ch02;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -67,6 +65,7 @@ public class UserSocket extends Thread {
 						String msg = bufferedReader.readLine();
 						mContext.serverGUI.getOutputMessage().append("[" + userName + "]" + msg + "\n");
 						getProtocol(msg);
+						mContext.saveFile(msg);
 					} catch (IOException e) {
 						e.printStackTrace();
 						mContext.serverGUI.getOutputMessage().append("[ " + userName + " ] 님의 접속이 끊어졌습니다.\n");
@@ -147,7 +146,7 @@ public class UserSocket extends Thread {
 				if (room.getRoomTitle().equals(message)) {
 					room.addUser(this);
 					setRoomTitle(message);
-					room.broadcastRoom("Chatting/" + message + "/" + userName + "/입장");
+					room.broadcastRoom("Chatting/" + message + "/입장");
 					sendMessage("EnterRoom/" + message);
 				}
 			}
@@ -156,15 +155,16 @@ public class UserSocket extends Thread {
 		case "Chatting":
 
 			String roomTitle = message;
-			String userName = stringTokenizer.nextToken();
 			String msg = stringTokenizer.nextToken();
+			
 
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 
 				// 같은 채팅방 유저들 간에만 채팅 가능
 				if (room.getRoomTitle().equals(roomTitle)) {
-					room.broadcastRoom("Chatting/" + roomTitle + "/" + userName + "/" + msg);
+					room.broadcastRoom("Chatting/" + roomTitle + "/" + msg);
+					System.out.println("서버에서 보내는 Chatting 프로토콜");
 				}
 			}
 
@@ -180,7 +180,7 @@ public class UserSocket extends Thread {
 					targetRoom.deleteUser(this);
 					setRoomTitle(null);
 					sendMessage("ExitRoom/" + message);
-					targetRoom.broadcastRoom("Chatting/" + message + "/" + this.userName + "/퇴장");
+					targetRoom.broadcastRoom("Chatting/" + message + "/퇴장");
 				}
 			}
 			break;

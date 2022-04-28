@@ -68,11 +68,10 @@ public class Client {
 					while (true) {
 						try {
 							String msg = bufferedReader.readLine();
-							System.out.println("클라이언트가 보냄 : " + msg);
 							setProtocol(msg);
 						} catch (Exception e) {
 							try {
-								clientGUI.getOutputMessage().append(userName + " : 사용자 접속 끊어짐\n");
+								clientGUI.getOutputMessage().append("[ " + userName + " ] 사용자 접속 끊어짐\n");
 								bufferedReader.close();
 								bufferedWriter.close();
 								socket.close();
@@ -112,11 +111,11 @@ public class Client {
 		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
 
 		String protocol = stringTokenizer.nextToken();
-		//String sender = stringTokenizer.nextToken();
 		String message = stringTokenizer.nextToken();
 
 		System.out.println("프로토콜 : " + protocol);
 		System.out.println("메시지 : " + message);
+		
 
 		switch (protocol) {
 		case "Whisper":
@@ -138,13 +137,12 @@ public class Client {
 			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
 			break;
 		case "Chatting":
-
 			String roomTitle = message;
-			userName = stringTokenizer.nextToken();
 			String msg = stringTokenizer.nextToken();
+			System.out.println("채팅 프로토콜 : " + msg);
 
 			if (!msg.equals("입장") && !msg.equals("퇴장")) {
-				clientGUI.getOutputMessage().append(userName + " : " + msg + "\n");
+				clientGUI.getOutputMessage().append(this.userName + " : " + msg + "\n");
 
 			}
 

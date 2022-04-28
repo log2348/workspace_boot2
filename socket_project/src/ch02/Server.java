@@ -82,11 +82,11 @@ public class Server {
 	}
 	
 	//서버 측으로 들어온 데이터를 파일로 저장
-	public void saveFile() {
+	public void saveFile(String str) {
 
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter("chat_log.txt", true))) {
-			//bw.write(str + "\n");
-			//bw.flush();
+			bw.write(str + "\n");
+			bw.flush();
 
 		} catch (Exception e) {
 			e.printStackTrace();

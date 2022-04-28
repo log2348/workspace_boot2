@@ -96,7 +96,6 @@ public class ServerGUI extends JFrame implements ActionListener {
 			server.startServer(server.getPort());
 		} else if (selectedBtn == saveBtn) {
 			JOptionPane.showMessageDialog(null, "파일 저장 완료", "알림", JOptionPane.CLOSED_OPTION);
-			server.saveFile();
 		}
 
 	}
