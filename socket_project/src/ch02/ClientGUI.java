@@ -44,15 +44,16 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JButton makeRoomBtn;
 	private JButton enterRoomBtn;
 	private JButton exitRoomBtn;
+	private JButton whisperBtn;
 
 	private JTextArea outputMessage; // 전송한 텍스트 화면에 출력
 	private JTextField inputMessage; // 채팅 메시지 입력란
 
 	private JTabbedPane menuTab;
 
-	private JList totalUserList;
-	private JList totalRoomList;
-	
+	private JList<String> totalUserList;
+	private JList<String> totalRoomList;
+
 	Vector<String> userSockets = new Vector<String>();
 	Vector<String> rooms = new Vector<String>();
 
@@ -82,6 +83,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		enterRoomBtn = new JButton("방 입장");
 		exitRoomBtn = new JButton("방 나가기");
 		logInBtn = new JButton("로그인");
+		whisperBtn = new JButton("쪽지 보내기");
 
 		totalUserList = new JList();
 		totalRoomList = new JList();
@@ -134,7 +136,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 		waitingRoomPanel.add(totalUserList);
 		waitingRoomPanel.add(totalRoomLabel);
 		waitingRoomPanel.add(totalUserLabel);
-		
+		waitingRoomPanel.add(whisperBtn);
+
 		backgroundLogInPanel.add(logInPanel);
 		backgroundLogInPanel.setBackground(Color.lightGray);
 		waitingRoomPanel.setBackground(Color.lightGray);
@@ -162,6 +165,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		enterRoomBtn.setBounds(350, 450, 100, 30);
 		makeRoomBtn.setBounds(350, 400, 100, 30);
 		logInBtn.setBounds(150, 300, 100, 30);
+		whisperBtn.setBounds(130, 400, 100, 30);
 
 		txtIp.setBounds(170, 60, 100, 20);
 		txtPort.setBounds(170, 110, 100, 20);
@@ -184,6 +188,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		makeRoomBtn.addActionListener(this);
 		enterRoomBtn.addActionListener(this);
 		exitRoomBtn.addActionListener(this);
+		whisperBtn.addActionListener(this);
 	}
 
 	@Override
@@ -218,36 +223,53 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		} else if (selectedBtn == sendBtn) {
 			System.out.println("클라이언트가 메시지 전송");
-			client.sendMessage("Chatting/" + client.getRoomTitle() + "/" + inputMessage.getText().trim());
-			outputMessage.append(client.getUserName() + " : " + inputMessage.getText() + "\n");
+			client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + inputMessage.getText());
+			//outputMessage.append(client.getUserName() + " : " + inputMessage.getText() + "\n");
 			inputMessage.setText(null);
 
 		} else if (selectedBtn == makeRoomBtn) {
 			System.out.println("방 만들기 버튼 클릭");
 			String roomTitle = JOptionPane.showInputDialog("방 이름을 입력하세요.");
-			rooms.add(roomTitle);
-			totalRoomList.setListData(rooms);
-			JOptionPane.showMessageDialog(null, "방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
-			setTitle("[ " + roomTitle + " ] 방 입니다.");
 
 			if (roomTitle != null) {
+				JOptionPane.showMessageDialog(null, "방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
 				client.sendMessage("CreateRoom/" + roomTitle);
+			} else {
+				JOptionPane.showMessageDialog(null, "방 제목을 입력하세요.", "알림", JOptionPane.CLOSED_OPTION);
 			}
 
 		} else if (selectedBtn == exitRoomBtn) {
 			System.out.println("방 나가기");
-			client.sendMessage("ExitRoom/" + client.getRoomTitle());
-			outputMessage.append("[ " + client.getUserName() + " ] 님이 " + client.getRoomTitle() + "에서 퇴장하셨습니다.\n");
+			client.sendMessage("ExitRoom/" + client.getClientRoomTitle());
+			outputMessage
+					.append("[ " + client.getUserName() + " ] 님이 " + client.getClientRoomTitle() + "에서 퇴장하셨습니다.\n");
+			menuTab.setSelectedComponent(waitingRoomPanel);
 
 		} else if (selectedBtn == enterRoomBtn) {
 			System.out.println("방 입장 버튼 클릭");
 
 			// 목록에 있는 방 선택해서 입장
 			String selectedRoom = (String) totalRoomList.getSelectedValue();
-			client.sendMessage("EnterRoom/" + selectedRoom);
 
-			JOptionPane.showMessageDialog(null, "채팅방 [  " + selectedRoom + " ] 에 입장완료", "알림",
-					JOptionPane.INFORMATION_MESSAGE);
+			setTitle("[ " + selectedRoom + " ] 방 입니다.");
+			client.sendMessage("EnterRoom/" + selectedRoom);
+			menuTab.setSelectedComponent(chattingRoomPanel);
+
+		} else if (selectedBtn == whisperBtn) {
+			System.out.println("귓속말 보내기");
+
+			String selectedUser = (String) totalUserList.getSelectedValue();
+			if (selectedUser != null) {
+				String message = JOptionPane.showInputDialog("보낼 메시지");
+				if (message != null) {
+					client.sendMessage("Whisper/" + client.getUserName() + "@" + message);
+				} else {
+					JOptionPane.showMessageDialog(null, "내용을 입력하세요.", "알림", JOptionPane.CLOSED_OPTION);
+				}
+
+			} else {
+				JOptionPane.showMessageDialog(null, "보낼 대상을 선택하세요.", "알림", JOptionPane.CLOSED_OPTION);
+			}
 
 		}
 

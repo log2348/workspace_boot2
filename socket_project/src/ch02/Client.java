@@ -33,7 +33,7 @@ public class Client {
 	private ServerGUI serverGUI;
 
 	private String userName;
-	private String roomTitle;
+	private String clientRoomTitle;
 
 	public Client() {
 		clientGUI = new ClientGUI(this);
@@ -70,9 +70,8 @@ public class Client {
 				public void run() {
 					while (true) {
 						try {
-
 							String msg = bufferedReader.readLine();
-							System.out.println("못 받는 상황 !! " +msg);
+							System.out.println("클라이언트가 보냄 : " +msg);
 							setProtocol(msg);
 						} catch (Exception e) {
 							try {
@@ -110,7 +109,7 @@ public class Client {
 	}
 
 	// 프로토콜 별 동작 수행
-	private void setProtocol(String str) {
+	public void setProtocol(String str) {
 
 		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
 
@@ -125,13 +124,15 @@ public class Client {
 			stringTokenizer = new StringTokenizer(message, "@");
 			
 			String userName = stringTokenizer.nextToken();
-			String content = stringTokenizer.nextToken();
-			
+			String content = stringTokenizer.nextToken();		
 			JOptionPane.showMessageDialog(null, content, "[ " + userName + " ] 님의 쪽지", JOptionPane.ERROR_MESSAGE);
+			
 			break;
-		case "CreateRoom":
-			roomTitle = message;
-			break;
+//		case "CreateRoom":
+//			//clientRoomTitle = message;
+//			clientGUI.rooms.add(message);
+//			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
+//			break;
 		case "CreateRoomFail":
 			JOptionPane.showMessageDialog(null, "이미 존재하는 방입니다.", "알림", JOptionPane.ERROR_MESSAGE);
 			break;
@@ -144,43 +145,33 @@ public class Client {
 			clientGUI.getOutputMessage().append(message + " : " + msg + "\n");
 			break;
 		case "EnterRoom":
-			roomTitle = message;
-			JOptionPane.showMessageDialog(null, "채팅방 [ " + roomTitle + " ] 에 입장완료", "알림",
-					JOptionPane.INFORMATION_MESSAGE);
-			clientGUI.getOutputMessage().setText("");
+			clientRoomTitle = message;
+			clientGUI.getOutputMessage().setText("[ " + clientRoomTitle + " ] 방에 입장하셨습니다.\n");
 			break;
 		case "NewUser":
-			System.out.println(message);
-			// 백터 
 			clientGUI.userSockets.add(message);
 			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
 			break;
 		case "ExitRoom":
-			clientGUI.getOutputMessage().append("[ " + roomTitle + "] 에서 퇴장하셨습니다.");
-			roomTitle = null;
+			clientGUI.getOutputMessage().append("[ " + clientRoomTitle + "] 에서 퇴장하셨습니다.");
+			clientRoomTitle = null;
 			break;
 		case "OldUser":
 			System.out.println("OldUser 들어오나요?? " + message);
-			// 백터
-			// 1. 
-			checkDoubling(message);
+
+			clientGUI.userSockets.add(message);
 			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
 			
 			break;
 		case "OldRoom":
 			clientGUI.rooms.add(message);
+			System.out.println("클라이언트 측 OldRoom 들어오나요?");
 			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
 			break;
 		}
 
 	}
-
-	private void checkDoubling(String userName) {
-		// 자료구조에 object a < a (x)
-		//clientGUI.userSockets.remove(userName);
-		clientGUI.userSockets.add(userName);
-	}
-
+	
 	public static void main(String[] args) {
 		new Client();
 	}

@@ -2,6 +2,11 @@ package ch02;
 
 import java.util.Vector;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Room {
 
 	Server mContext;
@@ -17,13 +22,17 @@ public class Room {
 
 	public void broadcastRoom(String str) {
 		for (int i = 0; i < roomUser.size(); i++) {
-			UserSocket userSocket = roomUser.elementAt(i);
+			UserSocket userSocket = roomUser.get(i);
 			userSocket.sendMessage(str);
 		}
 	}
 
 	public void addUser(UserSocket user) {
 		roomUser.add(user);
+	}
+	
+	public void deleteUser(UserSocket user) {
+		roomUser.remove(user);
 	}
 
 }
