@@ -1,14 +1,10 @@
 package ch02;
 
-import java.awt.Color;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.InputStreamReader;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +27,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 	private JTextArea outputMessage;
 	private JTextField inputMessage;
 	private JTextField txtport;
+	private ScrollPane scrollPane;
 
 	private Server server;
 
@@ -54,6 +51,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 		inputMessage = new JTextField();
 		outputMessage = new JTextArea();
 		txtport = new JTextField();
+		scrollPane = new ScrollPane();
 	}
 
 	private void setInitLayout() {
@@ -66,6 +64,7 @@ public class ServerGUI extends JFrame implements ActionListener {
 		add(outputMessage);
 		add(startServerBtn);
 		add(saveBtn);
+		add(scrollPane);
 
 		outputMessage.setEditable(false);
 
@@ -75,6 +74,10 @@ public class ServerGUI extends JFrame implements ActionListener {
 		saveBtn.setBounds(230, 7, 100, 25);
 		startServerBtn.setBounds(350, 7, 100, 25);
 		outputMessage.setBounds(30, 40, 420, 350);
+		
+		scrollPane.setBounds(35, 40, 400, 335);
+		scrollPane.add(outputMessage);		
+		
 	}
 
 	private void addListener() {

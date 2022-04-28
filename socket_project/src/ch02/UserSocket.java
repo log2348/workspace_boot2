@@ -28,8 +28,9 @@ public class UserSocket extends Thread {
 
 	private String userName;
 	private String roomTitle;
-
-	// Vector<Room> rooms = new Vector<>();
+	
+	private boolean roomCheck;
+	private boolean chatCheck;
 
 	public UserSocket(Server mContext, Socket socket) {
 		this.socket = socket;
@@ -42,11 +43,6 @@ public class UserSocket extends Thread {
 
 			userName = bufferedReader.readLine();
 
-			// 이시점에는 c2는 방송을 못 받음 !~
-			// 이유는 이코드 아래에서 백터에 저장 !!!
-			// mContext.broadcast("NewUser/" + userName); // c1한테만 메시지가 전달된다
-
-			// 사용자에게 자신을 알린 후 벡터에 자신 추가
 			for (int i = 0; i < mContext.users.size(); i++) {
 				UserSocket userSocket = mContext.users.get(i);
 				System.out.println("서버에서 확인하는 olduser : " + userSocket.getUserName());
@@ -54,13 +50,13 @@ public class UserSocket extends Thread {
 
 			}
 
-			// 룸 정보 안들어옴
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 				System.out.println("서버가 보내는 기존 방 리스트 : " + room.getRoomTitle());
 				sendMessage("OldRoom/" + room.getRoomTitle()); // 개별적으로 보내는 메시지
 			}
 
+			// 기존 사용자에게 자신을 알린 후 벡터에 자신 추가
 			mContext.broadcast("NewUser/" + userName);
 			mContext.users.add(this);
 
@@ -117,34 +113,38 @@ public class UserSocket extends Thread {
 		switch (protocol) {
 		case "Whisper":
 			stringTokenizer = new StringTokenizer(message, "@");
+			
 			String targetUser = stringTokenizer.nextToken();
 			String content = stringTokenizer.nextToken();
 
 			for (int i = 0; i < mContext.users.size(); i++) {
 				UserSocket user = mContext.users.get(i);
 				if (user.getUserName().equals(targetUser)) {
-					sendMessage("Whisper/" + userName + "@" + content);
-				} else {
-					JOptionPane.showMessageDialog(null, "존재하지 않는 사용자입니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					sendMessage("Whisper/" + targetUser + "@" + content);
 				}
 			}
 			break;
 
 		case "CreateRoom":
-
+			roomCheck = true;
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 
 				// 같은 이름의 방 존재여부 확인
-				if (mContext.rooms.get(i).getRoomTitle().equals(message)) {
-					sendMessage("CreateRoomFail/ok");
-					break;
-				}
+				if (room.getRoomTitle().equals(message)) {
+					sendMessage("CreateRoomFail/");
+					JOptionPane.showMessageDialog(null, "같은 방의 이름이 존재합니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					roomCheck = false;
+				} 
 			}
-			Room newRoom = new Room(message, this);
-			mContext.rooms.add(newRoom);
-			// sendMessage("CreateRoom/" + message);
-			mContext.broadcast("NewRoom/" + message);
+			
+			if(roomCheck) {
+				Room newRoom = new Room(message, this);
+				mContext.rooms.add(newRoom);
+				sendMessage("CreateRoom/" + message);
+				mContext.broadcast("NewRoom/" + message);
+				
+			}
 
 			break;
 
@@ -155,25 +155,33 @@ public class UserSocket extends Thread {
 				if (room.getRoomTitle().equals(message)) {
 					room.addUser(this);
 					setRoomTitle(message);
+					room.broadcastRoom("Chatting/" + message + "/" + userName + "/입장");
 					sendMessage("EnterRoom/" + message);
-					System.out.println("유저소켓 : " + message);
-					room.broadcastRoom("Chatting/" + userName + "/ 입장");
 				}
 			}
 			break;
 
 		case "Chatting":
-
+			
+			String roomTitle = message;
+			String userName = stringTokenizer.nextToken();
 			String msg = stringTokenizer.nextToken();
+			
+			Room room = null;
 
 			for (int i = 0; i < mContext.rooms.size(); i++) {
-				Room room = mContext.rooms.get(i);
+				room = mContext.rooms.get(i);
 
-				// 채팅 방 이름 확인해서 해당하는 채팅방에 메시지 띄우기
+				// 같은 채팅방 유저들 간에만 채팅 가능
 				if (room.getRoomTitle().equals(message)) {
-					room.broadcastRoom("Chatting/" + userName + "/" + msg);
+					chatCheck = true;
 				}
 			}
+			
+			if(chatCheck) {
+				room.broadcastRoom("Chatting/" + message + "/" + userName + "/" + msg);
+			}
+
 			break;
 
 		case "ExitRoom":
@@ -185,8 +193,12 @@ public class UserSocket extends Thread {
 					targetRoom.deleteUser(this);
 					setRoomTitle(null);
 					sendMessage("ExitRoom/" + message);
+					targetRoom.broadcastRoom("Chatting/" + message + "/" + this.userName + "/퇴장" );
 				}
 			}
+			break;
+		case "NewRoom":
+			mContext.broadcast("NewRoom/" + message);
 			break;
 
 		}

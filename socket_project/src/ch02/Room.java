@@ -20,6 +20,7 @@ public class Room {
 		userSocket.setRoomTitle(roomTitle);
 	}
 
+	// 같은 채팅방에 있는 유저들에게 출력
 	public void broadcastRoom(String str) {
 		for (int i = 0; i < roomUser.size(); i++) {
 			UserSocket userSocket = roomUser.get(i);

@@ -2,10 +2,14 @@ package ch02;
 
 public interface ChatService {
 	
-	void whisper(String msg);
-	
-	void createRoom(String roomTitle);
-	
-	void deleteRoom(String roomTitle);
+	void chat();
+	void whisper();
+	void createRoom();
+	void enterRoom();
+	void exitRoom();
+	void newRoom();
+	void newUser();
+	void oldRoom();
+	void oldUsesr();
 
 }

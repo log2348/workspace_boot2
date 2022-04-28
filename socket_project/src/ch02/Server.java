@@ -57,7 +57,6 @@ public class Server {
 
 						userSocket.start();
 
-						// 여기서 벡터에 등록하지 않음
 					} catch (IOException e) {
 						e.printStackTrace();
 						System.out.println("서버 중지");

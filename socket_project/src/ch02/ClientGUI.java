@@ -1,6 +1,7 @@
 package ch02;
 
 import java.awt.Color;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -28,6 +29,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JPanel mainPanel;
 	private JPanel waitingRoomPanel;
 	private JPanel chattingRoomPanel; // 채팅 창
+	
+	private ScrollPane scrollPane;
 
 	private JButton logInBtn;
 	private JTextField txtIp;
@@ -41,7 +44,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JLabel totalRoomLabel;
 
 	private JButton sendBtn;
-	private JButton makeRoomBtn;
+	private JButton createRoomBtn;
 	private JButton enterRoomBtn;
 	private JButton exitRoomBtn;
 	private JButton whisperBtn;
@@ -79,11 +82,13 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		menuTab = new JTabbedPane(JTabbedPane.TOP);
 		sendBtn = new JButton("전송");
-		makeRoomBtn = new JButton("방 생성");
-		enterRoomBtn = new JButton("방 입장");
+		createRoomBtn = new JButton("방 만들기");
+		enterRoomBtn = new JButton("방 입장하기");
 		exitRoomBtn = new JButton("방 나가기");
 		logInBtn = new JButton("로그인");
 		whisperBtn = new JButton("쪽지 보내기");
+		
+		scrollPane = new ScrollPane();
 
 		totalUserList = new JList();
 		totalRoomList = new JList();
@@ -100,6 +105,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		mainPanel.setLayout(null);
 		mainPanel.add(menuTab);
+		
 
 		menuTab.setBounds(0, 0, getWidth(), getHeight());
 		menuTab.addTab("대기실", null, waitingRoomPanel, null);
@@ -129,8 +135,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 		chattingRoomPanel.add(totalUserList);
 		chattingRoomPanel.add(sendBtn);
 		chattingRoomPanel.add(exitRoomBtn);
+		chattingRoomPanel.add(scrollPane);
 
-		waitingRoomPanel.add(makeRoomBtn);
+		waitingRoomPanel.add(createRoomBtn);
 		waitingRoomPanel.add(enterRoomBtn);
 		waitingRoomPanel.add(totalRoomList);
 		waitingRoomPanel.add(totalUserList);
@@ -150,20 +157,23 @@ public class ClientGUI extends JFrame implements ActionListener {
 		logInPanel.add(txtPort);
 		logInPanel.add(txtUserName);
 		logInPanel.add(userNameLabel);
+		
+		scrollPane.add(outputMessage);
+		scrollPane.setBounds(35, 105, 420, 440);
 
 		totalRoomLabel.setBounds(250, 30, 150, 50);
 		totalUserLabel.setBounds(20, 30, 150, 50);
 
-		totalUserList.setBounds(20, 70, 200, 300);
-		totalRoomList.setBounds(250, 70, 200, 300);
+		totalUserList.setBounds(25, 70, 200, 300);
+		totalRoomList.setBounds(255, 70, 200, 300);
 
 		inputMessage.setBounds(45, 505, 320, 25);
-		outputMessage.setBounds(45, 100, 400, 400);
+		outputMessage.setBounds(40, 100, 400, 400);
 
 		sendBtn.setBounds(370, 505, 75, 25);
 		exitRoomBtn.setBounds(350, 70, 90, 25);
-		enterRoomBtn.setBounds(350, 450, 100, 30);
-		makeRoomBtn.setBounds(350, 400, 100, 30);
+		enterRoomBtn.setBounds(355, 450, 100, 30);
+		createRoomBtn.setBounds(355, 400, 100, 30);
 		logInBtn.setBounds(150, 300, 100, 30);
 		whisperBtn.setBounds(130, 400, 100, 30);
 
@@ -185,7 +195,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private void addListener() {
 		logInBtn.addActionListener(this);
 		sendBtn.addActionListener(this);
-		makeRoomBtn.addActionListener(this);
+		createRoomBtn.addActionListener(this);
 		enterRoomBtn.addActionListener(this);
 		exitRoomBtn.addActionListener(this);
 		whisperBtn.addActionListener(this);
@@ -223,11 +233,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		} else if (selectedBtn == sendBtn) {
 			System.out.println("클라이언트가 메시지 전송");
-			client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + inputMessage.getText());
+			client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + client.getUserName() + "/" + inputMessage.getText());
 			//outputMessage.append(client.getUserName() + " : " + inputMessage.getText() + "\n");
 			inputMessage.setText(null);
 
-		} else if (selectedBtn == makeRoomBtn) {
+		} else if (selectedBtn == createRoomBtn) {
 			System.out.println("방 만들기 버튼 클릭");
 			String roomTitle = JOptionPane.showInputDialog("방 이름을 입력하세요.");
 
@@ -241,8 +251,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (selectedBtn == exitRoomBtn) {
 			System.out.println("방 나가기");
 			client.sendMessage("ExitRoom/" + client.getClientRoomTitle());
-			outputMessage
-					.append("[ " + client.getUserName() + " ] 님이 " + client.getClientRoomTitle() + "에서 퇴장하셨습니다.\n");
+			outputMessage.setText("");
+			//outputMessage.append("[ " + client.getUserName() + " ] 님이 [" + client.getClientRoomTitle() + " ]에서 퇴장하셨습니다.\n");
+			setTitle("[ " + txtUserName.getText() + " ] 님의 SMALL TALK");
 			menuTab.setSelectedComponent(waitingRoomPanel);
 
 		} else if (selectedBtn == enterRoomBtn) {
@@ -250,10 +261,16 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 			// 목록에 있는 방 선택해서 입장
 			String selectedRoom = (String) totalRoomList.getSelectedValue();
+			if(selectedRoom != null) {
+				setTitle("[ " + selectedRoom + " ] 방 입니다.");
+				client.sendMessage("EnterRoom/" + selectedRoom);
+				client.setClientRoomTitle(selectedRoom);
+				menuTab.setSelectedComponent(chattingRoomPanel);
+				
+			} else {
+				JOptionPane.showMessageDialog(null, "방을 선택하세요.", "알림", JOptionPane.CLOSED_OPTION);
+			}
 
-			setTitle("[ " + selectedRoom + " ] 방 입니다.");
-			client.sendMessage("EnterRoom/" + selectedRoom);
-			menuTab.setSelectedComponent(chattingRoomPanel);
 
 		} else if (selectedBtn == whisperBtn) {
 			System.out.println("귓속말 보내기");
@@ -262,7 +279,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			if (selectedUser != null) {
 				String message = JOptionPane.showInputDialog("보낼 메시지");
 				if (message != null) {
-					client.sendMessage("Whisper/" + client.getUserName() + "@" + message);
+					client.sendMessage("Whisper/" + selectedUser + "@" + message);
 				} else {
 					JOptionPane.showMessageDialog(null, "내용을 입력하세요.", "알림", JOptionPane.CLOSED_OPTION);
 				}
