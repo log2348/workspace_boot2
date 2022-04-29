@@ -112,7 +112,9 @@ public class Client {
 
 		String protocol = stringTokenizer.nextToken();
 		String message = stringTokenizer.nextToken();
-
+		
+		//room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + msg);
+		
 		System.out.println("프로토콜 : " + protocol);
 		System.out.println("메시지 : " + message);
 		
@@ -128,6 +130,8 @@ public class Client {
 			break;
 		case "CreateRoom":
 			clientRoomTitle = message;
+			//clientGUI.getCreateRoomBtn().setEnabled(false);
+			//clientGUI.setContentPane(clientGUI.getChattingRoomPanel());
 			break;
 		case "NewRoom":
 			clientGUI.rooms.add(message);
@@ -155,7 +159,7 @@ public class Client {
 			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
 			break;
 		case "ExitRoom":
-			//clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
+			clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
 			clientGUI.getOutputMessage().setText("");
 			clientRoomTitle = "";
 			break;

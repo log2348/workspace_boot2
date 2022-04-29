@@ -27,7 +27,9 @@ public class UserSocket extends Thread {
 	private String userName;
 	private String roomTitle;
 
+	// 유저, 채팅방 이름 중복 체크
 	private boolean roomCheck;
+	private boolean userCheck;
 
 	public UserSocket(Server mContext, Socket socket) {
 		this.socket = socket;
@@ -147,7 +149,7 @@ public class UserSocket extends Thread {
 				if (room.getRoomTitle().equals(message)) {
 					room.addUser(this);
 					setRoomTitle(message);
-					room.broadcastRoom("Chatting/" + message + "/" + userName + "/입장");
+					room.broadcastRoom("EnterRoom/" + message);
 					sendMessage("EnterRoom/" + message);
 				}
 			}
@@ -160,14 +162,20 @@ public class UserSocket extends Thread {
 			
 			String msg = stringTokenizer.nextToken();
 
+			// 현재 방은 하나이다 !!!
+			// 방이 2개이면 ?? 
+			
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 
 				// 같은 채팅방 유저들 간에만 채팅 가능
-//				if (room.getRoomTitle().equals(roomTitle)) {
-//					room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + msg);
-//					System.out.println("서버에서 처리하는 Chatting : " + msg);
-//				}
+				if (room.getRoomTitle().equals(roomTitle)) {
+					// 한번 호출 (
+					System.out.println(roomTitle);
+					
+					room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + msg);
+					System.out.println("서버에서 처리하는 Chatting : " + msg);
+				}
 			}
 
 			break;
@@ -188,6 +196,23 @@ public class UserSocket extends Thread {
 		case "NewRoom":
 			mContext.broadcast("NewRoom/" + message);
 			break;
+		
+		case "NewUser":
+			userCheck = true;
+			for (int i = 0; i < mContext.users.size(); i++) {
+				UserSocket user = mContext.users.get(i);
+
+				// 유저 이름 중복 체크
+				if (user.getUserName().equals(message)) {
+					JOptionPane.showMessageDialog(null, "이미 사용 중인 아이디입니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					userCheck = false;
+				}
+			}
+
+			if (roomCheck) {
+				mContext.broadcast("NewUser/" + message);
+				
+			}
 
 		}
 
