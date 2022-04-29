@@ -154,7 +154,7 @@ public class Client {
 			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
 			break;
 		case "ExitRoom":
-			clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
+			//clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
 			clientGUI.getOutputMessage().setText("");
 			clientRoomTitle = "";
 			break;

@@ -164,12 +164,11 @@ public class Client implements ChatService {
 	@Override
 	public void chat() {
 		String roomTitle = message;
+		String chatUser = stringTokenizer.nextToken();		
 		String msg = stringTokenizer.nextToken();
-		System.out.println("채팅 프로토콜 : " + msg);
 
 		if (!msg.equals("입장") && !msg.equals("퇴장")) {
-			clientGUI.getOutputMessage().append(this.userName + " : " + msg + "\n");
-
+			clientGUI.getOutputMessage().append(chatUser + " : " + msg + "\n");
 		}
 
 	}

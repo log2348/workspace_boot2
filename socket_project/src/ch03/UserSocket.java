@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
@@ -28,7 +27,9 @@ public class UserSocket extends Thread implements ChatService {
 	private String userName;
 	private String roomTitle;
 
+	// 유저, 채팅방 이름 중복 체크
 	private boolean roomCheck;
+	private boolean userCheck;
 
 	private StringTokenizer stringTokenizer;
 
@@ -250,8 +251,21 @@ public class UserSocket extends Thread implements ChatService {
 
 	@Override
 	public void newUser() {
-		mContext.users.add(this);
-		mContext.broadcast("NewUser/" + userName);
+		userCheck = true;
+		for (int i = 0; i < mContext.users.size(); i++) {
+			UserSocket user = mContext.users.get(i);
+
+			// 유저 이름 중복 체크
+			if (user.getUserName().equals(message)) {
+				JOptionPane.showMessageDialog(null, "이미 사용 중인 아이디입니다.", "알림", JOptionPane.ERROR_MESSAGE);
+				userCheck = false;
+			}
+		}
+
+		if (roomCheck) {
+			mContext.broadcast("NewUser/" + message);
+
+		}
 
 	}
 
