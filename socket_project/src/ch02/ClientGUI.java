@@ -119,7 +119,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		txtIp.setText(client.getIp());
 
-		setVisible(true);
+		
 	}
 
 	private void setInitLayout() {
@@ -189,16 +189,16 @@ public class ClientGUI extends JFrame implements ActionListener {
 		userNameLabel.setBounds(70, 165, 80, 30);
 
 		setContentPane(backgroundLogInPanel);
-
+		setVisible(true);
 	}
 
 	private void addListener() {
+		whisperBtn.addActionListener(this);
 		logInBtn.addActionListener(this);
 		sendBtn.addActionListener(this);
 		createRoomBtn.addActionListener(this);
 		enterRoomBtn.addActionListener(this);
 		exitRoomBtn.addActionListener(this);
-		whisperBtn.addActionListener(this);
 	}
 
 	@Override
@@ -233,8 +233,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		} else if (selectedBtn == sendBtn) {
 			System.out.println("채팅 전송");
-			if(inputMessage.getText() != null) {
-				client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + inputMessage.getText());
+			if(inputMessage.getText() != null && !inputMessage.getText().equals("")) {
+				client.sendMessage("Chatting/" + client.getClientRoomTitle() + "/" + client.getUserName() + "/" + inputMessage.getText());
 				inputMessage.setText(null);
 			}
 
@@ -243,8 +243,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 			String roomTitle = JOptionPane.showInputDialog("방 이름을 입력하세요.");
 
 			if (roomTitle != null) {
-				JOptionPane.showMessageDialog(null, "방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
 				client.sendMessage("CreateRoom/" + roomTitle);
+				
 			} else {
 				JOptionPane.showMessageDialog(null, "방 제목을 입력하세요.", "알림", JOptionPane.CLOSED_OPTION);
 			}

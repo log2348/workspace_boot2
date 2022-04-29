@@ -1,3 +1,5 @@
+소켓통신을 이용한 채팅 프로그램 만들기
+
 양방향, 다중접속 구현
 
 같은 방 유저들끼리 채팅 가능
@@ -7,17 +9,18 @@
 
 ****************** 해결할 것 ****************
 채팅이 여러 번 찍힘
-
+같은 방 아닌데 채팅 보내짐
 
 *********************************************
-프로토콜
+프로토콜 별 기능
 
 Whisper 귓속말
-Chatting 채팅 "Chatting/방이름/내용"
-NewUser 
+Chatting 채팅 "Chatting/방이름/유저이름/내용"
+NewUser
+NewRoom
 CreateRoom 방 생성
 EnterRoom 방 입장
 ExitRoom 방 나가기
-OldUser 기존에 있는 유저들의 목록 업데이트 등
-OldRoom
+OldUser/OldRoom 기존에 있는 유저들 정보 업데이트
+
 
