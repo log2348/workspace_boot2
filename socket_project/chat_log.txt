@@ -348,3 +348,45 @@ Chatting/ffff/2/gdsfasdf
 Chatting/11/1/dsfasdf
 ExitRoom/ffff/2
 ExitRoom/11/1
+CreateRoom/22
+Chatting/22/2/아무말
+EnterRoom/22/1
+Chatting/22/1/안녕
+Chatting/22/2/너도 안녕
+ExitRoom/22/1
+CreateRoom/ㅎㅎ
+EnterRoom/ㅎㅎ/3
+Chatting/ㅎㅎ/3/fgdgsd
+Chatting/ㅎㅎ/1/ㅇㄹㄴㅇㅁㄹㅇㄴㅁㄹ
+Chatting/ㅎㅎ/3/ㅎㅎ방 맞지
+Chatting/22/2/ㅇㅇㅇ
+ExitRoom/22/2
+ExitRoom/ㅎㅎ/1
+ExitRoom/ㅎㅎ/3
+Whisper/2@ㅇㄹㅇㄴㄹ
+CreateRoom/11
+EnterRoom/11/1
+EnterRoom/11/2
+Chatting/11/1/dsfasdfads
+Chatting/11/2/dfasdf
+CreateRoom/11
+Chatting/11/1/dsfsda
+EnterRoom/11/2
+Chatting/11/2/fdsfdsf
+Chatting/11/1/한번만 되네
+Chatting/11/2/그치
+ExitRoom/11/1
+CreateRoom/2
+Chatting/2/3/dfsdaf
+EnterRoom/2/1
+Chatting/2/1/ㅇㄹㄴㅇㅁㄻㄴ
+Chatting/2/3/adsfasdf
+ExitRoom/2/1
+ExitRoom/2/3
+CreateRoom/ff
+EnterRoom/ff/1
+Chatting/ff/3/dfasdf
+Chatting/ff/1/ㅇㄻㄴㅇㄹ
+ExitRoom/ff/3
+ExitRoom/ff/1
+ExitRoom/11/2
