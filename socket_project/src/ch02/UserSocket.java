@@ -26,6 +26,14 @@ public class UserSocket extends Thread {
 
 	private String userName;
 	private String roomTitle;
+	
+	// 프로토콜 문자열 분리
+	StringTokenizer stringTokenizer;
+	
+	String protocol;
+	String message;
+	String chatUser;
+	String chatMsg;
 
 	// 유저, 채팅방 이름 중복 체크
 	private boolean roomCheck;
@@ -99,10 +107,10 @@ public class UserSocket extends Thread {
 
 	// 프로토콜 별 동작 수행하도록
 	public void getProtocol(String str) {
-		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
+		stringTokenizer = new StringTokenizer(str, "/");
 
-		String protocol = stringTokenizer.nextToken();
-		String message = stringTokenizer.nextToken();
+		protocol = stringTokenizer.nextToken();
+		message = stringTokenizer.nextToken();
 
 		switch (protocol) {
 		case "Whisper":
@@ -142,24 +150,28 @@ public class UserSocket extends Thread {
 			break;
 
 		case "EnterRoom":
+			
+			roomTitle = message;
+			chatUser = stringTokenizer.nextToken();
+			
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 
 				if (room.getRoomTitle().equals(message)) {
 					room.addUser(this);
 					setRoomTitle(message);
-					room.broadcastRoom("EnterRoom/" + message);
+					room.broadcastRoom("EnterRoom/" + roomTitle + "/" + chatUser);
 					// sendMessage("EnterRoom/" + message);
 				}
 			}
 			break;
 
 		case "Chatting":
+			
+			roomTitle = message;
+			chatUser = stringTokenizer.nextToken();
 
-			String roomTitle = message;
-			String chatUser = stringTokenizer.nextToken();
-
-			String msg = stringTokenizer.nextToken();
+			chatMsg = stringTokenizer.nextToken();
 
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
@@ -168,14 +180,15 @@ public class UserSocket extends Thread {
 				if (room.getRoomTitle().equals(roomTitle)) {
 					System.out.println(roomTitle);
 
-					room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + msg);
-					System.out.println("서버에서 처리하는 Chatting : " + msg);
+					room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + chatMsg);
 				}
 			}
 
 			break;
 
 		case "ExitRoom":
+			roomTitle = message;
+			chatUser = stringTokenizer.nextToken();
 
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room targetRoom = mContext.rooms.get(i);
@@ -183,7 +196,7 @@ public class UserSocket extends Thread {
 				if (targetRoom.getRoomTitle().equals(message)) {
 					targetRoom.deleteUser(this);
 					// setRoomTitle(null);
-					sendMessage("ExitRoom/" + message);
+					sendMessage("ExitRoom/" + roomTitle + "/" + chatUser);
 					targetRoom.broadcastRoom("Chatting/" + message + "/" + userName + "/퇴장");
 				}
 			}

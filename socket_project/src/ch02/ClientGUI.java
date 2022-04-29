@@ -251,7 +251,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		} else if (selectedBtn == exitRoomBtn) {
 			System.out.println("방 나가기");
-			client.sendMessage("ExitRoom/" + client.getClientRoomTitle());
+			client.sendMessage("ExitRoom/" + client.getClientRoomTitle() + "/" + client.getUserName());
 			//outputMessage.append("[ " + client.getUserName() + " ] 님이 [" + client.getClientRoomTitle() + " ]에서 퇴장하셨습니다.\n");
 			setTitle("[ " + txtUserName.getText() + " ] 님의 SMALL TALK");
 			menuTab.setSelectedComponent(waitingRoomPanel);
@@ -263,7 +263,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			String selectedRoom = (String) totalRoomList.getSelectedValue();
 			if(selectedRoom != null) {
 				setTitle("[ " + selectedRoom + " ] 방 입니다.");
-				client.sendMessage("EnterRoom/" + selectedRoom);
+				client.sendMessage("EnterRoom/" + selectedRoom + "/" + client.getUserName());
 				client.setClientRoomTitle(selectedRoom);
 				menuTab.setSelectedComponent(chattingRoomPanel);
 				
