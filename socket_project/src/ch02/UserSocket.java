@@ -136,8 +136,7 @@ public class UserSocket extends Thread {
 				mContext.rooms.add(newRoom);
 				sendMessage("CreateRoom/" + message);
 				mContext.broadcast("NewRoom/" + message);
-				//JOptionPane.showMessageDialog(null, "방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
-				
+
 			}
 
 			break;
@@ -150,7 +149,7 @@ public class UserSocket extends Thread {
 					room.addUser(this);
 					setRoomTitle(message);
 					room.broadcastRoom("EnterRoom/" + message);
-					sendMessage("EnterRoom/" + message);
+					// sendMessage("EnterRoom/" + message);
 				}
 			}
 			break;
@@ -159,20 +158,16 @@ public class UserSocket extends Thread {
 
 			String roomTitle = message;
 			String chatUser = stringTokenizer.nextToken();
-			
+
 			String msg = stringTokenizer.nextToken();
 
-			// 현재 방은 하나이다 !!!
-			// 방이 2개이면 ?? 
-			
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 
 				// 같은 채팅방 유저들 간에만 채팅 가능
 				if (room.getRoomTitle().equals(roomTitle)) {
-					// 한번 호출 (
 					System.out.println(roomTitle);
-					
+
 					room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + msg);
 					System.out.println("서버에서 처리하는 Chatting : " + msg);
 				}
@@ -187,7 +182,7 @@ public class UserSocket extends Thread {
 
 				if (targetRoom.getRoomTitle().equals(message)) {
 					targetRoom.deleteUser(this);
-					setRoomTitle(null);
+					// setRoomTitle(null);
 					sendMessage("ExitRoom/" + message);
 					targetRoom.broadcastRoom("Chatting/" + message + "/" + userName + "/퇴장");
 				}
@@ -196,7 +191,7 @@ public class UserSocket extends Thread {
 		case "NewRoom":
 			mContext.broadcast("NewRoom/" + message);
 			break;
-		
+
 		case "NewUser":
 			userCheck = true;
 			for (int i = 0; i < mContext.users.size(); i++) {
@@ -211,7 +206,7 @@ public class UserSocket extends Thread {
 
 			if (roomCheck) {
 				mContext.broadcast("NewUser/" + message);
-				
+
 			}
 
 		}

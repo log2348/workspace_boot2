@@ -113,8 +113,6 @@ public class Client {
 		String protocol = stringTokenizer.nextToken();
 		String message = stringTokenizer.nextToken();
 		
-		//room.broadcastRoom("Chatting/" + roomTitle + "/" + chatUser + "/" + msg);
-		
 		System.out.println("프로토콜 : " + protocol);
 		System.out.println("메시지 : " + message);
 		
@@ -130,20 +128,17 @@ public class Client {
 			break;
 		case "CreateRoom":
 			clientRoomTitle = message;
-			//clientGUI.getCreateRoomBtn().setEnabled(false);
-			//clientGUI.setContentPane(clientGUI.getChattingRoomPanel());
+			JOptionPane.showMessageDialog(null, "[ " + message + " ] 방 입장", "알림", JOptionPane.CLOSED_OPTION);
 			break;
 		case "NewRoom":
 			clientGUI.rooms.add(message);
 			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
 			break;
 			
-		case "Chatting": // 얘가 두번 호출
+		case "Chatting":
 			String roomTitle = message;
-			String chatUser = stringTokenizer.nextToken();
-			
+			String chatUser = stringTokenizer.nextToken();		
 			String msg = stringTokenizer.nextToken();
-			System.out.println("프로토콜 Chatting : " + msg);
 
 			if (!msg.equals("입장") && !msg.equals("퇴장")) {
 				clientGUI.getOutputMessage().append(chatUser + " : " + msg + "\n");
