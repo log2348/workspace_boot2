@@ -32,6 +32,14 @@ public class Client {
 	private String userName;
 	private String clientRoomTitle;
 
+	// 프로토콜 문자열 분리
+	StringTokenizer stringTokenizer;
+
+	String protocol;
+	String message;
+	String chatUser;
+	String chatMsg;
+
 	public Client() {
 		clientGUI = new ClientGUI(this);
 	}
@@ -108,14 +116,13 @@ public class Client {
 	// 프로토콜 별 동작 수행
 	public void setProtocol(String str) {
 
-		StringTokenizer stringTokenizer = new StringTokenizer(str, "/");
+		stringTokenizer = new StringTokenizer(str, "/");
 
-		String protocol = stringTokenizer.nextToken();
-		String message = stringTokenizer.nextToken();
-		
+		protocol = stringTokenizer.nextToken();
+		message = stringTokenizer.nextToken();
+
 		System.out.println("프로토콜 : " + protocol);
 		System.out.println("메시지 : " + message);
-		
 
 		switch (protocol) {
 		case "Whisper":
@@ -134,10 +141,10 @@ public class Client {
 			clientGUI.rooms.add(message);
 			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
 			break;
-			
+
 		case "Chatting":
 			String roomTitle = message;
-			String chatUser = stringTokenizer.nextToken();		
+			String chatUser = stringTokenizer.nextToken();
 			String msg = stringTokenizer.nextToken();
 
 			if (!msg.equals("입장") && !msg.equals("퇴장")) {
@@ -147,14 +154,20 @@ public class Client {
 			break;
 		case "EnterRoom":
 			clientRoomTitle = message;
-			clientGUI.getOutputMessage().append("******* " + this.userName + " 님 입장 *******\n");
+			chatUser = stringTokenizer.nextToken();
+			
+			//clientGUI.getOutputMessage().setText(null);
+			clientGUI.getOutputMessage().append("*********** " + chatUser + " 님 입장 ***********\n");
 			break;
 		case "NewUser":
 			clientGUI.userSockets.add(message);
 			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
 			break;
 		case "ExitRoom":
-			clientGUI.getOutputMessage().append("****** " + this.userName + " 님 퇴장 ******\n");
+			clientRoomTitle = message;
+			chatUser = stringTokenizer.nextToken();
+			
+			clientGUI.getOutputMessage().append("********** " + chatUser + " 님 퇴장 **********\n");
 			clientGUI.getOutputMessage().setText("");
 			clientRoomTitle = "";
 			break;
