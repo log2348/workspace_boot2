@@ -134,8 +134,9 @@ public class UserSocket extends Thread {
 
 				// 같은 이름의 방 존재여부 확인
 				if (room.getRoomTitle().equals(message)) {
-					JOptionPane.showMessageDialog(null, "같은 방의 이름이 존재합니다.", "알림", JOptionPane.ERROR_MESSAGE);
+					sendMessage("CreateRoomFail/" + message);
 					roomCheck = false;
+					break;
 				}
 			}
 
@@ -221,6 +222,7 @@ public class UserSocket extends Thread {
 				mContext.broadcast("NewUser/" + message);
 
 			}
+			break;
 
 		}
 

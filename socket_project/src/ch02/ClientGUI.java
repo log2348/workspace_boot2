@@ -244,9 +244,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 			if (roomTitle != null) {
 				client.sendMessage("CreateRoom/" + roomTitle);
-				setTitle("[ " + roomTitle + " ] 방 입니다.");
-				client.setClientRoomTitle(roomTitle);
-				menuTab.setSelectedComponent(chattingRoomPanel);
+//				setTitle("[ " + roomTitle + " ] 방 입니다.");
+//				client.setClientRoomTitle(roomTitle);
+//				menuTab.setSelectedComponent(chattingRoomPanel);
 			} else {
 				JOptionPane.showMessageDialog(null, "방 제목을 입력하세요.", "알림", JOptionPane.CLOSED_OPTION);
 			}

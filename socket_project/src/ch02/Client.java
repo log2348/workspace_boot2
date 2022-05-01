@@ -136,7 +136,15 @@ public class Client {
 		case "CreateRoom":
 			clientRoomTitle = message;
 			JOptionPane.showMessageDialog(null, "[ " + message + " ] 방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
+			clientGUI.setTitle("[ " + message + " ] 방 입니다.");
+			clientGUI.getClient().setClientRoomTitle(message);
+			clientGUI.getMenuTab().setSelectedComponent(clientGUI.getChattingRoomPanel());
 			break;
+
+		case "CreateRoomFail":
+			JOptionPane.showMessageDialog(null, "이미 존재하는 방입니다.", "알림", JOptionPane.ERROR_MESSAGE);
+			break;
+
 		case "NewRoom":
 			clientGUI.rooms.add(message);
 			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
@@ -165,7 +173,7 @@ public class Client {
 		case "ExitRoom":
 			clientRoomTitle = message;
 			chatUser = stringTokenizer.nextToken();
-			
+
 			clientGUI.getOutputMessage().append("********** " + chatUser + " 님 퇴장 **********\n");
 			clientGUI.getOutputMessage().setText("");
 			clientRoomTitle = null;

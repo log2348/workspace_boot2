@@ -134,8 +134,9 @@ public class UserSocket extends Thread {
 
 				// 같은 이름의 방 존재여부 확인
 				if (room.getRoomTitle().equals(message)) {
-					sendMessage("CreateRoom/Fail");
+					sendMessage("CreateRoomFail/" + message);
 					roomCheck = false;
+					break;
 				}
 			}
 
@@ -161,7 +162,7 @@ public class UserSocket extends Thread {
 					room.addUser(this);
 					setRoomTitle(message);
 					room.broadcastRoom("EnterRoom/" + roomTitle + "/" + chatUser);
-					// sendMessage("EnterRoom/" + message);
+					//sendMessage("EnterRoom/" + roomTitle + "/" + chatUser);
 				}
 			}
 			break;
@@ -212,8 +213,9 @@ public class UserSocket extends Thread {
 
 				// 유저 이름 중복 체크
 				if (user.getUserName().equals(message)) {				
-					sendMessage("NewUser/Fail" + message);
+					sendMessage("NewUserFail/" + message);
 					userCheck = false;
+					break;
 				}
 			}
 
@@ -221,6 +223,7 @@ public class UserSocket extends Thread {
 				mContext.broadcast("NewUser/" + message);
 
 			}
+			break;
 
 		}
 

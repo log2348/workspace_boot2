@@ -134,14 +134,14 @@ public class Client {
 
 			break;
 		case "CreateRoom":
-			if(!message.equals("Fail")) {
-				clientRoomTitle = message;
-				JOptionPane.showMessageDialog(null, "[ " + message + " ] 방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);			
-			} else {
-				JOptionPane.showMessageDialog(null, "이미 존재하는 방입니다.", "알림", JOptionPane.ERROR_MESSAGE);
-			}
+			clientRoomTitle = message;
+			JOptionPane.showMessageDialog(null, "[ " + message + " ] 방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
+
 			break;
-			
+
+		case "CreateRoomFail":
+			JOptionPane.showMessageDialog(null, "이미 존재하는 방입니다.", "알림", JOptionPane.ERROR_MESSAGE);
+			break;
 		case "NewRoom":
 			clientGUI.rooms.add(message);
 			clientGUI.getTotalRoomList().setListData(clientGUI.rooms);
@@ -164,17 +164,17 @@ public class Client {
 			clientGUI.getOutputMessage().append("*********** " + chatUser + " 님 입장 ***********\n");
 			break;
 		case "NewUser":
-			if(!message.equals("Fail")) {
-				clientGUI.userSockets.add(message);
-				clientGUI.getTotalUserList().setListData(clientGUI.userSockets);					
-			} else {
-				JOptionPane.showMessageDialog(null, "이미 사용 중인 아이디입니다.", "알림", JOptionPane.ERROR_MESSAGE);
-			}
+			clientGUI.userSockets.add(message);
+			clientGUI.getTotalUserList().setListData(clientGUI.userSockets);
+
+			break;
+		case "NewUserFail":
+			JOptionPane.showMessageDialog(null, "이미 사용 중인 아이디입니다.", "알림", JOptionPane.ERROR_MESSAGE);
 			break;
 		case "ExitRoom":
 			clientRoomTitle = message;
 			chatUser = stringTokenizer.nextToken();
-			
+
 			clientGUI.getOutputMessage().append("********** " + chatUser + " 님 퇴장 **********\n");
 			clientGUI.getOutputMessage().setText("");
 			clientRoomTitle = null;
