@@ -26,10 +26,10 @@ public class UserSocket extends Thread {
 
 	private String userName;
 	private String roomTitle;
-	
+
 	// 프로토콜 문자열 분리
 	StringTokenizer stringTokenizer;
-	
+
 	String protocol;
 	String message;
 	String chatUser;
@@ -150,10 +150,10 @@ public class UserSocket extends Thread {
 			break;
 
 		case "EnterRoom":
-			
+
 			roomTitle = message;
 			chatUser = stringTokenizer.nextToken();
-			
+
 			for (int i = 0; i < mContext.rooms.size(); i++) {
 				Room room = mContext.rooms.get(i);
 
@@ -167,7 +167,7 @@ public class UserSocket extends Thread {
 			break;
 
 		case "Chatting":
-			
+
 			roomTitle = message;
 			chatUser = stringTokenizer.nextToken();
 
@@ -217,7 +217,7 @@ public class UserSocket extends Thread {
 				}
 			}
 
-			if (roomCheck) {
+			if (userCheck) {
 				mContext.broadcast("NewUser/" + message);
 
 			}

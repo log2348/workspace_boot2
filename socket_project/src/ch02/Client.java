@@ -76,7 +76,7 @@ public class Client {
 					while (true) {
 						try {
 							String msg = bufferedReader.readLine();
-							setProtocol(msg);
+							getProtocol(msg);
 						} catch (Exception e) {
 							try {
 								clientGUI.getOutputMessage().append("[ " + userName + " ] 사용자 접속 끊어짐\n");
@@ -114,7 +114,7 @@ public class Client {
 	}
 
 	// 프로토콜 별 동작 수행
-	public void setProtocol(String str) {
+	public void getProtocol(String str) {
 
 		stringTokenizer = new StringTokenizer(str, "/");
 
@@ -135,7 +135,7 @@ public class Client {
 			break;
 		case "CreateRoom":
 			clientRoomTitle = message;
-			JOptionPane.showMessageDialog(null, "[ " + message + " ] 방 입장", "알림", JOptionPane.CLOSED_OPTION);
+			JOptionPane.showMessageDialog(null, "[ " + message + " ] 방 생성 완료", "알림", JOptionPane.CLOSED_OPTION);
 			break;
 		case "NewRoom":
 			clientGUI.rooms.add(message);
@@ -155,8 +155,7 @@ public class Client {
 		case "EnterRoom":
 			clientRoomTitle = message;
 			chatUser = stringTokenizer.nextToken();
-			
-			//clientGUI.getOutputMessage().setText(null);
+
 			clientGUI.getOutputMessage().append("*********** " + chatUser + " 님 입장 ***********\n");
 			break;
 		case "NewUser":
@@ -169,7 +168,7 @@ public class Client {
 			
 			clientGUI.getOutputMessage().append("********** " + chatUser + " 님 퇴장 **********\n");
 			clientGUI.getOutputMessage().setText("");
-			clientRoomTitle = "";
+			clientRoomTitle = null;
 			break;
 		case "OldUser":
 			clientGUI.userSockets.add(message);
