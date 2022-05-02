@@ -244,9 +244,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 			if (roomTitle != null) {
 				client.sendMessage("CreateRoom/" + roomTitle);
-//				setTitle("[ " + roomTitle + " ] 방 입니다.");
-//				client.setClientRoomTitle(roomTitle);
-//				menuTab.setSelectedComponent(chattingRoomPanel);
+
 			} else {
 				JOptionPane.showMessageDialog(null, "방 제목을 입력하세요.", "알림", JOptionPane.CLOSED_OPTION);
 			}
@@ -254,7 +252,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} else if (selectedBtn == exitRoomBtn) {
 			System.out.println("방 나가기");
 			client.sendMessage("ExitRoom/" + client.getClientRoomTitle() + "/" + client.getUserName());
-			//outputMessage.append("[ " + client.getUserName() + " ] 님이 [" + client.getClientRoomTitle() + " ]에서 퇴장하셨습니다.\n");
 			setTitle("[ " + txtUserName.getText() + " ] 님의 SMALL TALK");
 			menuTab.setSelectedComponent(waitingRoomPanel);
 

@@ -72,7 +72,6 @@ public class UserSocket extends Thread {
 			public void run() {
 				while (true) {
 					try {
-						System.out.println("readLine 11111111111111");
 						String msg = bufferedReader.readLine();
 						mContext.serverGUI.getOutputMessage().append("[" + userName + "]" + msg + "\n");
 						getProtocol(msg);
@@ -162,7 +161,6 @@ public class UserSocket extends Thread {
 					room.addUser(this);
 					setRoomTitle(message);
 					room.broadcastRoom("EnterRoom/" + roomTitle + "/" + chatUser);
-					// sendMessage("EnterRoom/" + message);
 				}
 			}
 			break;
@@ -196,7 +194,6 @@ public class UserSocket extends Thread {
 
 				if (targetRoom.getRoomTitle().equals(message)) {
 					targetRoom.deleteUser(this);
-					// setRoomTitle(null);
 					sendMessage("ExitRoom/" + roomTitle + "/" + chatUser);
 					targetRoom.broadcastRoom("Chatting/" + message + "/" + userName + "/퇴장");
 				}

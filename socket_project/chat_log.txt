@@ -601,3 +601,60 @@ Chatting/a/4/444
 ExitRoom/a/4
 CreateRoom/a
 CreateRoom/b
+CreateRoom/c1
+EnterRoom/c1/ha
+Chatting/c1/jh/안녕하세요
+Chatting/c1/ha/안녕하세요 ~~~~
+ExitRoom/c1/jh
+CreateRoom/c1
+CreateRoom/c2
+Chatting/c2/jh/c2방입니다
+ExitRoom/c1/ha
+EnterRoom/c2/ha
+Chatting/c2/ha/안녕하세요 ~~!~!~!~!~!
+Chatting/c2/jh/안녕하세요~~
+ExitRoom/c2/jh
+ExitRoom/c2/ha
+CreateRoom/room1
+EnterRoom/room1/bb
+Chatting/room1/aa/안녕하세요 ~~
+Chatting/room1/bb/안녕하세요 ~~~
+CreateRoom/r1
+EnterRoom/r1/bb
+Chatting/r1/aa/안녕하세요
+Chatting/r1/bb/안녕하세요 ~~~~~~~~~~~~~~
+ExitRoom/r1/aa
+ExitRoom/r1/bb
+CreateRoom/r1
+CreateRoom/r2
+Chatting/r2/aa/r2 방입니다
+EnterRoom/r2/bb
+Chatting/r2/bb/안녕하세요 !!!
+ExitRoom/r2/bb
+ExitRoom/r2/aa
+EnterRoom/r1/aa
+EnterRoom/r1/bb
+ExitRoom/r1/aa
+EnterRoom/r1/aa
+Chatting/r1/aa/안녕하세요
+Chatting/r1/bb/안녕하세요 ~~~
+ExitRoom/r1/aa
+ExitRoom/r1/bb
+Whisper/aa@ㅁㅁㅁ
+CreateRoom/r1
+Chatting/r1/abc123/r1입장 ~~~
+EnterRoom/r1/def456
+Chatting/r1/def456/안녕하세요
+Chatting/r1/abc123/안녕하세요 ~~~~
+Chatting/r1/def456/메시지 주고받기
+Chatting/r1/abc123/주고받기 가능 ~~~~
+Chatting/r1/abc123/가능~~~~
+ExitRoom/r1/abc123
+ExitRoom/r1/def456
+CreateRoom/r1
+CreateRoom/r2
+Chatting/r2/abc123/r2방 입장~~
+EnterRoom/r1/def456
+Chatting/r1/def456/r1방 입장
+Chatting/r2/abc123/같은방에서만 대화가능
+ExitRoom/r1/def456
