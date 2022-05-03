@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MainTest3 {
+public class MainTest3 {	
 	
 	// producttbl 가져오기
 	private Connection conn;
@@ -46,7 +46,6 @@ public class MainTest3 {
 		
 	}
 	
-	// 코드의 시작점
 	public static void main(String[] args) {
 		new MainTest3();
 

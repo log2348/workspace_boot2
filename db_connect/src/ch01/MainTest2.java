@@ -46,6 +46,7 @@ public class MainTest2 {
 		
 	}
 	
+	// 코드의 시작점
 	public static void main(String[] args) {
 		
 		new MainTest2();

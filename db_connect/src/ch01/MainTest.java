@@ -53,6 +53,6 @@ public class MainTest {
 	public static void main(String[] args) {
 		new MainTest();
 
-	} // end of main
+	}
 
 }
