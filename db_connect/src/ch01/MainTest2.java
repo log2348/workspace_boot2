@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class MainTest2 {
+	
 	// buytbl 테이블 가져오기
 	private Connection conn;
 	private static final String USER_NAME = "root";
