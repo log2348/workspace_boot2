@@ -65,8 +65,8 @@ public class EmployeeDao implements IEmployeeDao {
 
 		ArrayList<EmployeeDto> resultList = new ArrayList<EmployeeDto>();
 
-		String joinQuery = "select * "
-						+ "from employees AS a "
+		String joinQuery = "SELECT * "
+						+ "FROM employees AS a "
 						+ "LEFT JOIN dept_manager AS b "
 						+ "ON a.emp_no = b.emp_no "
 						+ "WHERE b.dept_no = (SELECT dept_no " 
@@ -103,9 +103,9 @@ public class EmployeeDao implements IEmployeeDao {
 	
 	// 이름 받아서 연봉 받은 횟수 조회
 	@Override
-	public int getSalaryCount(String firstName, String lastName) {
+	public int showSalaryCount(String firstName, String lastName) {
 		int salaryCount = 0;
-		String joinQuery = "SELECT *, count(*) "
+		String joinQuery = "SELECT *, COUNT(*) "
 				+ "FROM salaries AS s "
 				+ "INNER JOIN employees AS e "
 				+ "ON s.emp_no = e.emp_no "
@@ -120,7 +120,7 @@ public class EmployeeDao implements IEmployeeDao {
 
 			// while문에 안 넣으면 오류 발생
 			while(resultSet.next()) {
-				salaryCount = resultSet.getInt("count(*)");
+				salaryCount = resultSet.getInt("COUNT(*)");
 			}
 
 		} catch (SQLException e) {
@@ -138,17 +138,18 @@ public class EmployeeDao implements IEmployeeDao {
 		
 	}
 
-	// 직함명 받아서 해당 직함의 직원 수 출력
+	// 직함명 받아 현재 근무하는 해당 직함의 직원 수 출력
 	@Override
-	public int showNumberOfTitle(String title) {
+	public int showTitleEmpNumber(String title) {
 		
 		int employeeNum = 0;
 		
-		String joinQuery = "SELECT *, count(*) AS total "
+		String joinQuery = "SELECT *, COUNT(*) AS total "
 							+ "FROM employees AS a "
 							+ "RIGHT JOIN titles AS b "
 							+ "ON a.emp_no = b.emp_no "
-							+ "WHERE b.title = ? ";
+							+ "WHERE b.to_date = '9999-01-01' "
+							+ "AND b.title = ? ";
 		
 		try {
 			preparedStatement = connection.prepareStatement(joinQuery);
@@ -180,7 +181,7 @@ public class EmployeeDao implements IEmployeeDao {
 	@Override
 	public int showSalary(String first_name, String last_name) {
 		
-		String joinQuery = "SELECT *, max(salary) AS max_salary "
+		String joinQuery = "SELECT *, MAX(salary) AS max_salary "
 				+ "FROM employees e "
 				+ "INNER JOIN salaries s "
 				+ "ON e.emp_no = s.emp_no "
@@ -202,6 +203,13 @@ public class EmployeeDao implements IEmployeeDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+				preparedStatement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return recentSalary;

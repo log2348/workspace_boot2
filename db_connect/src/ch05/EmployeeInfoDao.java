@@ -21,7 +21,6 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		connection = dbClient.getConnection();
 	}
 
-	// 중첩 쿼리문 사용
 	// 해당 부서에서 현재 근무 중인 직원 정보 출력
 	@Override
 	public ArrayList<EmployeeInfoDto> showDeptEmpInfo(String deptName) {
@@ -31,7 +30,7 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		String selectQuery = "SELECT * "
 							+ "FROM employees AS a "
 							+ "LEFT JOIN dept_emp AS b "
-							+ "on a.emp_no = b.emp_no "
+							+ "ON a.emp_no = b.emp_no "
 							+ "WHERE b.dept_no = (SELECT dept_no "
 												+ "FROM departments AS d "
 												+ "WHERE dept_name = ?) "
@@ -69,14 +68,14 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		
 	}
 
-	// 부서명 받아서 현재 근무 중인 매니저 정보 출력 (중첩 서브쿼리)
+	// 부서명 받아서 현재 근무 중인 매니저 정보 출력
 	@Override
 	public ArrayList<EmployeeInfoDto> showPresentManagerInfo(String deptName) {
 		
 		resultList = new ArrayList<EmployeeInfoDto>();
 		String selectQuery = "SELECT * "
-							+ "FROM employees as A "
-							+ "WHERE A.emp_no = (SELECT emp_no "
+							+ "FROM employees AS a "
+							+ "WHERE a.emp_no = (SELECT emp_no "
 												+ "FROM dept_manager "
 												+ "WHERE to_date = '9999-01-01' "
 												+ "AND dept_no = (SELECT dept_no "
@@ -102,13 +101,19 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+				preparedStatement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return resultList;
 		
 	}
 
-	// 인라인 뷰 사용
 	// 해당 직함의 직원 정보 전체 조회
 	@Override
 	public ArrayList<EmployeeInfoDto> showTitleEmpInfo(String title) {
@@ -150,18 +155,17 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		return resultList;
 	}
 
-	// 인라인 뷰 사용
-	// 입력한 직원의 직함 출력
+	// 직원의 직함 출력
 	@Override
 	public String getTitle(String firstName, String lastName) {
 
 		String title = null;
 		String selectQuery = "SELECT *, (SELECT b.title "
-										+ "FROM titles as b "
+										+ "FROM titles AS b "
 										+ "WHERE a.emp_no = b.emp_no "
-										+ "GROUP BY emp_no) as title "
-							+ "FROM employees as a "
-							+ "WHERE a.first_name = ? and a.last_name = ? ";
+										+ "GROUP BY emp_no) AS title "
+							+ "FROM employees AS a "
+							+ "WHERE a.first_name = ? AND a.last_name = ? ";
 		try {
 			preparedStatement = connection.prepareStatement(selectQuery);
 			preparedStatement.setString(1, firstName);
@@ -193,11 +197,11 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		ArrayList<EmployeeInfoDto> resultList = new ArrayList<EmployeeInfoDto>();
 		String selectQuery = "SELECT * "
 							+ "FROM employees as a "
-							+ "LEFT join dept_emp as b "
+							+ "LEFT JOIN dept_emp as b "
 							+ "ON a.emp_no = b.emp_no "
-							+ "WHERE b.dept_no = (select dept_no "
-												+ "from departments as d "
-												+ "where dept_name = ?) "
+							+ "WHERE b.dept_no = (SELECT dept_no "
+												+ "FROM departments as d "
+												+ "WHERE dept_name = ?) "
 							+ "ORDER BY a.hire_date DESC ";
 		
 		try {
