@@ -9,12 +9,11 @@ public class MainTest {
 		EmployeeInfoDao employeeInfoDao = new EmployeeInfoDao();
 		ArrayList<EmployeeInfoDto> data;	
 				
-		// 현재 직함이 Staff인 직원 정보 출력
+		// 현재 직함이 Staff인 직원 정보 출력	
 		data = employeeInfoDao.showPresenTitleEmp("Staff");
 		for (int i = 0; i < data.size(); i++) {
 			System.out.println(data.get(i));
-		}	
-		
+		}
 		
 		// Marketing 팀의 현재 팀장(매니저) 정보 출력
 		/*
