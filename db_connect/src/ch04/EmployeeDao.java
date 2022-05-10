@@ -19,7 +19,7 @@ public class EmployeeDao implements IEmployeeDao {
 		connection = dbClient.getConnection();
 	}
 
-	// 직함 이름 받아서 그에 해당하는 직원 정보 출력
+	// 직함 받아서 해당 직함의 직원 이력 출력 - INNER JOIN
 	@Override
 	public ArrayList<EmployeeDto> showTitleEmpInfo(String title) {
 		
@@ -38,9 +38,9 @@ public class EmployeeDao implements IEmployeeDao {
 			
 			while(resultSet.next()) {
 				EmployeeDto dto = new EmployeeDto();
-				dto.setEmp_no(resultSet.getString("emp_no"));
-				dto.setFirst_name(resultSet.getString("first_name"));
-				dto.setTitle(title);
+				dto.setEmpNo(resultSet.getString("emp_no"));
+				dto.setFirstName(resultSet.getString("first_name"));
+				dto.setTitle(resultSet.getString("title"));
 				resultList.add(dto);
 				}
 		} catch (Exception e) {
@@ -59,7 +59,7 @@ public class EmployeeDao implements IEmployeeDao {
 	}
 
 
-	// 부서이름 받아서 해당 부서의 역대 매니저 정보 출력
+	// 부서명 받아서 해당 부서의 역대 매니저 정보 출력 - LEFT JOIN
 	@Override
 	public ArrayList<EmployeeDto> showManagerInfo(String deptName) {
 
@@ -71,7 +71,7 @@ public class EmployeeDao implements IEmployeeDao {
 						+ "ON a.emp_no = b.emp_no "
 						+ "WHERE b.dept_no = (SELECT dept_no " 
 											+ "FROM departments "
-											+ "WHERE dept_name = ? )";
+											+ "WHERE dept_name = ?) ";
 		try {
 			preparedStatement = connection.prepareStatement(joinQuery);
 			preparedStatement.setString(1, deptName);
@@ -79,10 +79,10 @@ public class EmployeeDao implements IEmployeeDao {
 
 			while (resultSet.next()) {
 				EmployeeDto dto = new EmployeeDto();
-				dto.setEmp_no(resultSet.getString("emp_no"));
-				dto.setFirst_name(resultSet.getString("first_name"));
-				dto.setDept_no(resultSet.getString("dept_no"));
-				dto.setDept_name(deptName);
+				dto.setEmpNo(resultSet.getString("emp_no"));
+				dto.setFirstName(resultSet.getString("first_name"));
+				dto.setDeptNo(resultSet.getString("dept_no"));
+				dto.setDeptName(deptName);
 				resultList.add(dto);
 			}
 
@@ -101,16 +101,16 @@ public class EmployeeDao implements IEmployeeDao {
 
 	}
 	
-	// 이름 받아서 연봉 받은 횟수 조회
+	// 풀네임 받아서 연봉 받은 횟수 반환 - INNER JOIN
 	@Override
 	public int showSalaryCount(String firstName, String lastName) {
 		int salaryCount = 0;
 		String joinQuery = "SELECT *, COUNT(*) "
-				+ "FROM salaries AS s "
-				+ "INNER JOIN employees AS e "
-				+ "ON s.emp_no = e.emp_no "
-				+ "WHERE e.first_name = ? "
-				+ "AND e.last_name = ? ";
+							+ "FROM salaries AS s "
+							+ "INNER JOIN employees AS e "
+							+ "ON s.emp_no = e.emp_no "
+							+ "WHERE e.first_name = ? "
+							+ "AND e.last_name = ? ";
 		
 		try {
 			preparedStatement = connection.prepareStatement(joinQuery);
@@ -118,7 +118,7 @@ public class EmployeeDao implements IEmployeeDao {
 			preparedStatement.setString(2, lastName);
 			resultSet = preparedStatement.executeQuery();
 
-			// while문에 안 넣으면 오류 발생
+			// while문에 안 넣으면 예외 발생 - Before start of result set
 			while(resultSet.next()) {
 				salaryCount = resultSet.getInt("COUNT(*)");
 			}
@@ -138,7 +138,7 @@ public class EmployeeDao implements IEmployeeDao {
 		
 	}
 
-	// 직함명 받아 현재 근무하는 해당 직함의 직원 수 출력
+	// 현재 해당 직함을 가진 직원 수 반환 - RIGHT JOIN
 	@Override
 	public int showTitleEmpNumber(String title) {
 		
@@ -156,7 +156,6 @@ public class EmployeeDao implements IEmployeeDao {
 			preparedStatement.setString(1, title);		
 			resultSet = preparedStatement.executeQuery();
 
-			// while문에 안 넣으면 오류 발생
 			while(resultSet.next()) {
 				employeeNum = resultSet.getInt("total");				
 			}
@@ -176,20 +175,19 @@ public class EmployeeDao implements IEmployeeDao {
 
 	}
 
-
-	// 직원이 가장 최근에 받은 연봉이 얼마인지 반환
+	// 직원이 가장 최근에 받은 연봉(최고연봉)이 얼마인지 반환 - INNER JOIN
 	@Override
 	public int showSalary(String first_name, String last_name) {
 		
-		String joinQuery = "SELECT *, MAX(salary) AS max_salary "
-				+ "FROM employees e "
-				+ "INNER JOIN salaries s "
-				+ "ON e.emp_no = s.emp_no "
-				+ "WHERE e.first_name = ? "
-				+ "AND e.last_name = ? ";
-		
 		int recentSalary = 0;
 		
+		String joinQuery = "SELECT *, MAX(salary) max_salary "
+							+ "FROM employees e "
+							+ "INNER JOIN salaries s "
+							+ "ON e.emp_no = s.emp_no "
+							+ "WHERE e.first_name = ? "
+							+ "AND e.last_name = ? ";
+				
 		try {
 			preparedStatement = connection.prepareStatement(joinQuery);
 			preparedStatement.setString(1, first_name);

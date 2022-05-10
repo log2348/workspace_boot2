@@ -24,7 +24,7 @@ public class ShopDbDao implements IShopDbDao {
 		ArrayList<UserDto> resultData = new ArrayList<UserDto>();
 
 		try {
-			String sql = "SELECT * FROM userTbl AS a INNER JOIN buyTbl AS b ON a.userName = b.userName where a.userName = ? ";
+			String sql = "SELECT * FROM userTbl AS a INNER JOIN buyTbl AS b ON a.userName = b.userName WHERE a.userName = ? ";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, userName);
 

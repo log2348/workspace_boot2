@@ -21,7 +21,7 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		connection = dbClient.getConnection();
 	}
 
-	// 해당 부서에서 현재 근무 중인 직원 정보 출력
+	// 해당 부서에서 현재 근무 중인 직원 정보 출력 - 중첩 서브쿼리
 	@Override
 	public ArrayList<EmployeeInfoDto> showDeptEmpInfo(String deptName) {
 		
@@ -68,9 +68,9 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		
 	}
 
-	// 부서명 받아서 현재 근무 중인 매니저 정보 출력
+	// 부서명 받아서 현재 근무 중인 매니저 정보 출력 - 중첩 서브쿼리
 	@Override
-	public ArrayList<EmployeeInfoDto> showPresentManagerInfo(String deptName) {
+	public ArrayList<EmployeeInfoDto> showPresentManager(String deptName) {
 		
 		resultList = new ArrayList<EmployeeInfoDto>();
 		String selectQuery = "SELECT * "
@@ -114,16 +114,17 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		
 	}
 
-	// 해당 직함의 직원 정보 전체 조회
+	// 현재 근무 중인 직원 중 해당 직함을 가진 직원 정보 출력 - 인라인 뷰
 	@Override
-	public ArrayList<EmployeeInfoDto> showTitleEmpInfo(String title) {
+	public ArrayList<EmployeeInfoDto> showPresenTitleEmp(String title) {
 		
 		ArrayList<EmployeeInfoDto> resultList = new ArrayList<EmployeeInfoDto>();
 		
 		String selectQuery = "SELECT * "
 								+ "FROM employees as a, (SELECT * "
 														+ "FROM titles "
-														+ "WHERE title = ?) AS b "
+														+ "WHERE title = ? "
+														+ "AND to_date = '9999-01-01') AS b "
 								+ "WHERE a.emp_no = b.emp_no ";
 		
 		try {
@@ -155,7 +156,7 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		return resultList;
 	}
 
-	// 직원의 직함 출력
+	// 직원 풀네임으로 직함 검색 - 스칼라 서브쿼리
 	@Override
 	public String getTitle(String firstName, String lastName) {
 
@@ -172,10 +173,10 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 			preparedStatement.setString(2, lastName);
 			resultSet = preparedStatement.executeQuery();
 			
+			// while문에 안 넣으면 Before start of result set 예외 발생
 			while(resultSet.next()) {
 				title = resultSet.getString("title");
-			}
-			
+			}		
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -190,18 +191,18 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 		return title;
 	}
 
-	// 해당 부서에서 가장 최근 입사한 직원 순으로 출력
+	// 해당 부서에서 가장 최근 입사한 직원 순으로 출력 - 중첩 서브쿼리
 	@Override
 	public ArrayList<EmployeeInfoDto> orderByHireDate(String deptName) {
 		
 		ArrayList<EmployeeInfoDto> resultList = new ArrayList<EmployeeInfoDto>();
 		String selectQuery = "SELECT * "
-							+ "FROM employees as a "
-							+ "LEFT JOIN dept_emp as b "
+							+ "FROM employees AS a "
+							+ "LEFT JOIN dept_emp AS b "
 							+ "ON a.emp_no = b.emp_no "
 							+ "WHERE b.dept_no = (SELECT dept_no "
-												+ "FROM departments as d "
-												+ "WHERE dept_name = ?) "
+												+ "FROM departments "
+												+ "WHERE dept_name = ? ) "
 							+ "ORDER BY a.hire_date DESC ";
 		
 		try {
@@ -214,6 +215,7 @@ public class EmployeeInfoDao implements IEmployeeInfoDao {
 				dto.setEmpNo(resultSet.getString("emp_no"));
 				dto.setFirstName(resultSet.getString("first_name"));
 				dto.setLastName(resultSet.getString("last_name"));
+				dto.setDeptName(deptName);
 				resultList.add(dto);
 			}
 			
