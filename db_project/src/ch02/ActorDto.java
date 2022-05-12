@@ -1,4 +1,4 @@
-package ch01;
+package teamProject.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +16,7 @@ public class ActorDto extends Dto {
 	private int birthYear;
 	private String partner;
 	private String imageFileName;
+	
+	private RoleDto roleDto;
 	
 }

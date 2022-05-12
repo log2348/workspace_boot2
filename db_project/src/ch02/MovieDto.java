@@ -1,6 +1,4 @@
-package ch01;
-
-import java.util.ArrayList;
+package teamProject.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,12 +14,24 @@ public class MovieDto extends Dto {
 	private float starScore;	
 	private String imageFileName;
 	
+	private ActorDto actorDto;
+	private ScoreDto scoreDto;
+	
+	/*
 	ArrayList<String> actorList = new ArrayList<String>();
+	ArrayList<ScoreDto> scoreList = new ArrayList<ScoreDto>();
+	
 	
 	class MovieActorList {
 		String acotorName;
 		String category;
 		String roleName;
 	}
+	
+	class MovieScoreList {
+		int audience;
+		float starScore;
+	}
+	*/
 
 }
